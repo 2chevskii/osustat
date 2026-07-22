@@ -2,11 +2,10 @@ FROM node:24.18-alpine
 
 WORKDIR /server
 COPY package.json package-lock.json ./
-RUN npm install --verbose
+RUN npm ci --omit=dev
 
-COPY src/ ./
-COPY .env.local ./
+COPY src/ ./src/
 
-EXPOSE 3000
+EXPOSE 3001
 
-ENTRYPOINT ["node", "server.mjs"]
+ENTRYPOINT ["node", "src/server.mjs"]

@@ -6,13 +6,53 @@
   "configurations": [
     {
       "type": "node",
-      "name": "debug API",
+      "name": "Start api",
       "request": "launch",
-      "args": [
-        "."
-      ],
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
       "cwd": "${workspaceFolder}/packages/api",
-      "outputCapture": "std"
+      "console": "integratedTerminal",
+      "autoAttachChildProcesses": true,
+      "restart": true,
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "name": "Start frontend",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "${workspaceFolder}/packages/frontend",
+      "console": "integratedTerminal",
+      "autoAttachChildProcesses": true,
+      "restart": true,
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "name": "Start api and docker-compose",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "${workspaceFolder}/packages/api",
+      "console": "integratedTerminal",
+      "autoAttachChildProcesses": true,
+      "restart": true,
+      "preLaunchTask": "Start dev docker-compose",
+      "postDebugTask": "Stop dev docker-compose",
+      "skipFiles": ["<node_internals>/**"]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Start api and frontend",
+      "configurations": ["Start api", "Start frontend"],
+      "stopAll": true
+    },
+    {
+      "name": "Start api, frontend and docker-compose",
+      "configurations": ["Start api and docker-compose", "Start frontend"],
+      "stopAll": true
     }
   ]
 }

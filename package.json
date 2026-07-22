@@ -1,5 +1,9 @@
 {
   "scripts": {
+    "build": "npm --prefix packages/api run build && npm --prefix packages/frontend run build",
+    "dev:api": "npm --prefix packages/api run dev",
+    "dev:frontend": "npm --prefix packages/frontend run dev",
+    "test": "npm --prefix packages/api run test",
     "typecheck": "npm --prefix packages/api run typecheck"
   },
   "dependencies": {

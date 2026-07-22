@@ -1,14 +1,65 @@
-on: push
+name: CI
+
+on:
+  push:
+  pull_request:
+
+env:
+  IMAGE_NAME: ghcr.io/2chevskii/osustat-api
 
 jobs:
-  build-api-dockerimage:
+  verify:
+    name: Test, build, and verify the API image
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 1
-      - run: docker build -t ghcr.io/2chevskii/osustat-api:${{ github.sha }} packages/api
-      - run: docker login ghcr.io --username 2chevskii --password ${{ github.token }}
-      - run: docker push -t ghcr.io/2chevskii/osustat-api:${{ github.sha }}
     permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            packages/api/package-lock.json
+            packages/frontend/package-lock.json
+      - name: Install root dependencies
+        run: npm ci
+      - name: Install API dependencies
+        run: npm ci --prefix packages/api
+      - name: Install frontend dependencies
+        run: npm ci --prefix packages/frontend
+      - name: Run tests
+        run: npm test
+      - name: Build applications
+        run: npm run build
+      - name: Build API Docker image
+        run: docker build --tag osustat-api:ci packages/api
+
+  publish-image:
+    name: Publish API Docker image
+    needs: verify
+    runs-on: ubuntu-latest
+    # GitHub does not grant a writable token to pull requests from forks.
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    permissions:
+      contents: read
       packages: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Create image tags
+        id: tags
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: node scripts/ci/docker-tags.mjs
+      - name: Log in to GitHub Container Registry
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+      - name: Build and publish API Docker image
+        env:
+          IMAGE_TAGS: ${{ steps.tags.outputs.tags }}
+        run: node scripts/ci/publish-image.mjs
