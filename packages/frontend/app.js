@@ -16,7 +16,10 @@ function cardUrl() {
   const type = selectedIdentifierType()
   const size = document.querySelector('#size').value
   const format = document.querySelector('#format').value
-  const base = document.querySelector('#api-base').value.trim().replace(/\/+$/, '')
+  const base = document
+    .querySelector('#api-base')
+    .value.trim()
+    .replace(/\/+$/, '')
 
   if (!value || !base) return null
   return `${base}/players/${type}/${encodeURIComponent(value)}/cards/${size}.${format}`
@@ -29,11 +32,11 @@ function updateIdentifierField() {
   identifier.inputMode = isId ? 'numeric' : 'text'
 }
 
-document.querySelectorAll('input[name="identifier-type"]').forEach(input => {
+document.querySelectorAll('input[name="identifier-type"]').forEach((input) => {
   input.addEventListener('change', updateIdentifierField)
 })
 
-form.addEventListener('submit', event => {
+form.addEventListener('submit', (event) => {
   event.preventDefault()
   errorMessage.hidden = true
 
@@ -48,7 +51,8 @@ form.addEventListener('submit', event => {
 })
 
 preview.addEventListener('error', () => {
-  errorMessage.textContent = 'The card could not be rendered. Check the player and API address, then try again.'
+  errorMessage.textContent =
+    'The card could not be rendered. Check the player and API address, then try again.'
   errorMessage.hidden = false
 })
 
@@ -63,9 +67,12 @@ copyButton.addEventListener('click', async () => {
   try {
     await navigator.clipboard.writeText(url)
     copyButton.textContent = 'Copied'
-    setTimeout(() => { copyButton.textContent = 'Copy URL' }, 1600)
+    setTimeout(() => {
+      copyButton.textContent = 'Copy URL'
+    }, 1600)
   } catch {
-    errorMessage.textContent = 'Unable to copy the URL. Select it above and copy it manually.'
+    errorMessage.textContent =
+      'Unable to copy the URL. Select it above and copy it manually.'
     errorMessage.hidden = false
   }
 })

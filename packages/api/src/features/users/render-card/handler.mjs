@@ -1,13 +1,10 @@
-import { UserDataService } from "../shared/user-data-service.mjs"
-import { CardRenderer } from "./templates/card-renderer.mjs"
-
 /** @typedef {{ id: number } | { username: string }} UserIdentifier */
 /** @typedef {'compact' | 'full'} CardSize */
 
 export class RenderCardHandler {
   /**
-   * @param {UserDataService} userDataService
-   * @param {CardRenderer} cardRenderer
+   * @param {import('../shared/user-data-service.mjs').UserDataService} userDataService
+   * @param {import('./templates/card-renderer.mjs').CardRenderer} cardRenderer
    */
   constructor(userDataService, cardRenderer) {
     this.userDataService = userDataService
@@ -16,16 +13,18 @@ export class RenderCardHandler {
 
   /** @param {UserIdentifier} userIdentifier @param {CardSize} cardSize @returns {Promise<string>} */
   async handle(userIdentifier, cardSize) {
-    let userId = 0
+    let userId
 
-    if ('id' in userIdentifier) { userId = userIdentifier.id }
-    else if ('username' in userIdentifier) {
-      userId = await this.userDataService.resolveUserIdByUsername(userIdentifier.username)
+    if ('id' in userIdentifier) {
+      userId = userIdentifier.id
+    } else if ('username' in userIdentifier) {
+      userId = await this.userDataService.resolveUserIdByUsername(
+        userIdentifier.username,
+      )
       if (userId === 0) {
         throw new Error('Cannot resolve userID by username')
       }
-    }
-    else throw new Error('Invalid user identifier')
+    } else throw new Error('Invalid user identifier')
 
     const shortStats = await this.userDataService.getUserShortStats(userId)
     console.log('Got user short stats', shortStats)

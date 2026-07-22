@@ -1,0 +1,17 @@
+{
+  "include": ["./scripts"],
+  "exclude": ["./node_modules"],
+  "compilerOptions": {
+    "allowJs": true,
+    "maxNodeModuleJsDepth": 0,
+    "strict": true,
+    "checkJs": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  }
+}

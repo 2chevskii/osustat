@@ -12,7 +12,7 @@ async function buildApp(handler) {
   return app
 }
 
-test('serves the health endpoint', async t => {
+test('serves the health endpoint', async (t) => {
   const app = await buildApp({})
   t.after(() => app.close())
 
@@ -20,7 +20,7 @@ test('serves the health endpoint', async t => {
   assert.equal(response.statusCode, 200)
 })
 
-test('renders an SVG card for a numeric player id', async t => {
+test('renders an SVG card for a numeric player id', async (t) => {
   const calls = []
   const app = await buildApp({
     handle: async (...args) => {
@@ -37,7 +37,7 @@ test('renders an SVG card for a numeric player id', async t => {
   assert.deepEqual(calls, [[{ id: 42 }, 'full']])
 })
 
-test('renders PNG cards by username and rejects unsupported card sizes', async t => {
+test('renders PNG cards by username and rejects unsupported card sizes', async (t) => {
   const calls = []
   const app = await buildApp({
     handlePng: async (...args) => {
@@ -47,7 +47,9 @@ test('renders PNG cards by username and rejects unsupported card sizes', async t
   })
   t.after(() => app.close())
 
-  const pngResponse = await app.inject('/players/username/peppy/cards/compact.png')
+  const pngResponse = await app.inject(
+    '/players/username/peppy/cards/compact.png',
+  )
   assert.equal(pngResponse.statusCode, 200)
   assert.equal(pngResponse.headers['content-type'], 'image/png')
   assert.deepEqual(calls, [[{ username: 'peppy' }, 'compact']])

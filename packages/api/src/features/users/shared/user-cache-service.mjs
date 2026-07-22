@@ -17,16 +17,16 @@ export class UserCacheService {
   /** @returns {{ id(username: string): string, shortInfo(userId: number): string, shortStats(userId: number): string }} */
   get keys() {
     return {
-      id: username => `userid_lookup:${username}`,
-      shortInfo: userId => `user.info.short:${userId}`,
-      shortStats: userId => `user.stats.short:${userId}`
+      id: (username) => `userid_lookup:${username}`,
+      shortInfo: (userId) => `user.info.short:${userId}`,
+      shortStats: (userId) => `user.stats.short:${userId}`,
     }
   }
 
   /** @param {string} username @returns {Promise<number | null>} */
   async getId(username) {
-    const key = this.keys.id(username);
-    const strId = await this.redis.get(key);
+    const key = this.keys.id(username)
+    const strId = await this.redis.get(key)
     const id = strId === null ? Number.NaN : parseInt(strId, 10)
     console.log('UserCacheService.getId', { key, strId, id })
     return Number.isNaN(id) ? null : id
@@ -45,34 +45,55 @@ export class UserCacheService {
     const shortInfo = await this.redis.get(key)
     /** @type {ShortUserInfo | null} */
     const value = shortInfo === null ? null : this.fromRedisValue(shortInfo)
-    console.log('UserCacheService.getShortInfo', { userId, key, shortInfo, value })
-    return value;
+    console.log('UserCacheService.getShortInfo', {
+      userId,
+      key,
+      shortInfo,
+      value,
+    })
+    return value
   }
 
   /** @param {number} userId @param {ShortUserInfo} shortInfo */
   async setShortInfo(userId, shortInfo) {
-    const key = this.keys.shortInfo(userId);
+    const key = this.keys.shortInfo(userId)
     const value = this.toRedisValue(shortInfo)
     await this.redis.setEx(key, this.expirationTimeSeconds, value)
-    console.log('UserCacheService.setShortInfo', { userId, key, expirationTimeSeconds: this.expirationTimeSeconds, shortInfo, value })
+    console.log('UserCacheService.setShortInfo', {
+      userId,
+      key,
+      expirationTimeSeconds: this.expirationTimeSeconds,
+      shortInfo,
+      value,
+    })
   }
 
   /** @param {number} userId @returns {Promise<ShortStats | null>} */
   async getShortStats(userId) {
-    const key = this.keys.shortStats(userId);
+    const key = this.keys.shortStats(userId)
     const shortStats = await this.redis.get(key)
     /** @type {ShortStats | null} */
-    const value = shortStats === null ? null : this.fromRedisValue(shortStats);
-    console.log('UserCacheService.getShortStats', { userId, key, shortStats, value })
+    const value = shortStats === null ? null : this.fromRedisValue(shortStats)
+    console.log('UserCacheService.getShortStats', {
+      userId,
+      key,
+      shortStats,
+      value,
+    })
     return value
   }
 
   /** @param {number} userId @param {ShortStats} shortStats */
   async setShortStats(userId, shortStats) {
-    const key = this.keys.shortStats(userId);
+    const key = this.keys.shortStats(userId)
     const value = this.toRedisValue(shortStats)
     await this.redis.setEx(key, this.expirationTimeSeconds, value)
-    console.log('UserCacheService.setShortStats', { userId, shortStats, key, value })
+    console.log('UserCacheService.setShortStats', {
+      userId,
+      shortStats,
+      key,
+      value,
+    })
   }
 
   /** @param {ShortUserInfo | ShortStats} value @returns {string} */

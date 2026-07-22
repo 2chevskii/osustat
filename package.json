@@ -3,8 +3,18 @@
     "build": "npm --prefix packages/api run build && npm --prefix packages/frontend run build",
     "dev:api": "npm --prefix packages/api run dev",
     "dev:frontend": "npm --prefix packages/frontend run dev",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "lint": "eslint packages scripts",
     "test": "npm --prefix packages/api run test",
     "typecheck": "npm --prefix packages/api run typecheck"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.7.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.7.0",
+    "prettier": "^3.8.3"
   },
   "dependencies": {
     "pino": "^10.3.1"

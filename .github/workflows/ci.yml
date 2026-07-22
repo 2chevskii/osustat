@@ -25,8 +25,14 @@ jobs:
             packages/frontend/package-lock.json
       - name: Install root dependencies
         run: npm ci
+      - name: Check formatting
+        run: npm run format:check
+      - name: Lint source code
+        run: npm run lint
       - name: Install API dependencies
         run: npm ci --prefix packages/api
+      - name: Type-check API
+        run: npm run typecheck
       - name: Install frontend dependencies
         run: npm ci --prefix packages/frontend
       - name: Run tests

@@ -12,29 +12,56 @@
       <section class="intro" aria-labelledby="page-title">
         <p class="eyebrow">OSU! PROFILE CARDS</p>
         <h1 id="page-title">Make a card<br />for any player.</h1>
-        <p class="lede">Enter an osu! username or user ID, choose a layout, and use the image wherever you need it.</p>
+        <p class="lede">
+          Enter an osu! username or user ID, choose a layout, and use the image
+          wherever you need it.
+        </p>
       </section>
 
       <section class="generator" aria-label="Card generator">
         <form id="card-form">
           <fieldset>
             <legend>Find a player</legend>
-            <div class="identifier-type" role="radiogroup" aria-label="Identifier type">
-              <label><input type="radio" name="identifier-type" value="username" checked /> Username</label>
-              <label><input type="radio" name="identifier-type" value="id" /> User ID</label>
+            <div
+              class="identifier-type"
+              role="radiogroup"
+              aria-label="Identifier type"
+            >
+              <label
+                ><input
+                  type="radio"
+                  name="identifier-type"
+                  value="username"
+                  checked
+                />
+                Username</label
+              >
+              <label
+                ><input type="radio" name="identifier-type" value="id" /> User
+                ID</label
+              >
             </div>
             <label class="field-label" for="identifier">Username</label>
-            <input id="identifier" name="identifier" type="text" placeholder="peppy" autocomplete="off" required />
+            <input
+              id="identifier"
+              name="identifier"
+              type="text"
+              placeholder="peppy"
+              autocomplete="off"
+              required
+            />
           </fieldset>
 
           <div class="options">
-            <label class="field-label" for="size">Card size
+            <label class="field-label" for="size"
+              >Card size
               <select id="size" name="size">
                 <option value="compact">Compact</option>
                 <option value="full" selected>Full</option>
               </select>
             </label>
-            <label class="field-label" for="format">Format
+            <label class="field-label" for="format"
+              >Format
               <select id="format" name="format">
                 <option value="svg" selected>SVG</option>
                 <option value="png">PNG</option>
@@ -42,11 +69,20 @@
             </label>
           </div>
 
-          <label class="field-label" for="api-base">API address
-            <input id="api-base" name="api-base" type="url" value="http://localhost:3001" required />
+          <label class="field-label" for="api-base"
+            >API address
+            <input
+              id="api-base"
+              name="api-base"
+              type="url"
+              value="http://localhost:3001"
+              required
+            />
           </label>
 
-          <button type="submit">Render card <span aria-hidden="true">→</span></button>
+          <button type="submit">
+            Render card <span aria-hidden="true">→</span>
+          </button>
         </form>
 
         <div class="result" aria-live="polite">
@@ -56,7 +92,9 @@
           </div>
           <div class="url-row">
             <code id="card-url">Choose options to generate a URL</code>
-            <button id="copy-url" class="copy-button" type="button" disabled>Copy URL</button>
+            <button id="copy-url" class="copy-button" type="button" disabled>
+              Copy URL
+            </button>
           </div>
           <p id="error-message" class="error-message" hidden></p>
         </div>

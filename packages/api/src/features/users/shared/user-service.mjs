@@ -1,5 +1,3 @@
-import { OsuApiClient } from '../../../infrastructure/osu-api/client.mjs'
-
 /**
  * @typedef {{
  *   id: number, username: string, avatar_url: string, follower_count: number, join_date: string, is_supporter: boolean, country_code: string,
@@ -10,7 +8,7 @@ import { OsuApiClient } from '../../../infrastructure/osu-api/client.mjs'
  */
 
 export class UserService {
-  /** @param {OsuApiClient} osuApiClient */
+  /** @param {import('../../../infrastructure/osu-api/client.mjs').OsuApiClient} osuApiClient */
   constructor(osuApiClient) {
     this.api = osuApiClient
   }

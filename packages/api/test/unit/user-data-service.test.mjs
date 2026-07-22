@@ -25,7 +25,9 @@ const osuUser = {
 }
 
 test('returns a cached user id without calling the osu API', async () => {
-  const userService = { getByUsername: async () => assert.fail('must not fetch') }
+  const userService = {
+    getByUsername: async () => assert.fail('must not fetch'),
+  }
   const cache = { getId: async () => 42 }
   const service = new UserDataService(userService, cache)
 
@@ -34,10 +36,12 @@ test('returns a cached user id without calling the osu API', async () => {
 
 test('fetches a cache miss and stores the mapped user data', async () => {
   const updates = []
-  const userService = { getByUsername: async username => {
-    assert.equal(username, 'peppy')
-    return osuUser
-  } }
+  const userService = {
+    getByUsername: async (username) => {
+      assert.equal(username, 'peppy')
+      return osuUser
+    },
+  }
   const cache = {
     getId: async () => null,
     setId: async (...args) => updates.push(['id', ...args]),
@@ -49,27 +53,35 @@ test('fetches a cache miss and stores the mapped user data', async () => {
   assert.equal(await service.resolveUserIdByUsername('peppy'), 42)
   assert.deepEqual(updates, [
     ['id', 'peppy', 42],
-    ['info', 42, {
-      id: 42,
-      username: 'peppy',
-      avatarUrl: 'https://example.test/avatar.png',
-      isSupporter: true,
-      countryCode: 'AU',
-      followerCount: 7,
-      joinedAt: '2020-01-02T00:00:00Z',
-    }],
-    ['stats', 42, {
-      rank: 11,
-      countryRank: 2,
-      pp: 12345,
-      rankedScore: 1000,
-      totalScore: 2000,
-      playCount: 300,
-      playTime: 3600,
-      level: 99,
-      highestRank: 5,
-      accuracy: 98.76,
-    }],
+    [
+      'info',
+      42,
+      {
+        id: 42,
+        username: 'peppy',
+        avatarUrl: 'https://example.test/avatar.png',
+        isSupporter: true,
+        countryCode: 'AU',
+        followerCount: 7,
+        joinedAt: '2020-01-02T00:00:00Z',
+      },
+    ],
+    [
+      'stats',
+      42,
+      {
+        rank: 11,
+        countryRank: 2,
+        pp: 12345,
+        rankedScore: 1000,
+        totalScore: 2000,
+        playCount: 300,
+        playTime: 3600,
+        level: 99,
+        highestRank: 5,
+        accuracy: 98.76,
+      },
+    ],
   ])
 })
 

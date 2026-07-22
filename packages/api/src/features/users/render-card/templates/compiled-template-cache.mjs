@@ -6,28 +6,26 @@ const EXPIRATION_SECONDS = 30
 export class CompiledTemplateCache {
   constructor() {
     /** @type {Map<string, CachedTemplate>} */
-    this.cache = new Map();
+    this.cache = new Map()
   }
 
   /** @param {string} templateName @returns {CachedTemplate | null} */
   get(templateName) {
-    if (!this.cache.has(templateName))
-      return null;
-    return this.cache.get(templateName) ?? null;
+    if (!this.cache.has(templateName)) return null
+    return this.cache.get(templateName) ?? null
   }
 
   /** @param {string} templateName @param {CardTemplate} template */
   set(templateName, template) {
     const expiresAt = CompiledTemplateCache.getExpirationTime()
-    this.cache.set(templateName, { template, expiresAt });
+    this.cache.set(templateName, { template, expiresAt })
   }
 
   evictExpiredTemplates() {
     console.log('Evicting expired templates...')
     let deletedCount = 0
     for (const [key, { expiresAt }] of Array.from(this.cache.entries())) {
-      if (expiresAt > Date.now())
-        continue
+      if (expiresAt > Date.now()) continue
 
       this.cache.delete(key)
       deletedCount++
@@ -38,6 +36,6 @@ export class CompiledTemplateCache {
 
   /** @returns {number} */
   static getExpirationTime() {
-    return Date.now() + (EXPIRATION_SECONDS * 1000)
+    return Date.now() + EXPIRATION_SECONDS * 1000
   }
 }

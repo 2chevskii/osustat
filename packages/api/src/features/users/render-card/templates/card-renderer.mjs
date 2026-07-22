@@ -1,11 +1,10 @@
 import { Resvg } from '@resvg/resvg-js'
-import { CardTemplateProvider } from './card-template-provider.mjs'
 
 /** @typedef {import('../../shared/user-cache-service.mjs').ShortStats} ShortStats */
 /** @typedef {import('../../shared/user-cache-service.mjs').ShortUserInfo} ShortUserInfo */
 
 export class CardRenderer {
-  /** @param {CardTemplateProvider} templateProvider */
+  /** @param {import('./card-template-provider.mjs').CardTemplateProvider} templateProvider */
   constructor(templateProvider) {
     this.templateProvider = templateProvider
   }
@@ -39,7 +38,10 @@ export class CardRenderer {
       total_score: formatNumber(shortStats.totalScore),
       follower_count: formatNumber(shortUserInfo.followerCount),
       highest_rank: formatNumber(shortStats.highestRank),
-      joined_at: new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(new Date(shortUserInfo.joinedAt)),
+      joined_at: new Intl.DateTimeFormat('en-US', {
+        month: 'long',
+        year: 'numeric',
+      }).format(new Date(shortUserInfo.joinedAt)),
     })
   }
 

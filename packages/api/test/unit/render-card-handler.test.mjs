@@ -4,15 +4,15 @@ import { RenderCardHandler } from '../../src/features/users/render-card/handler.
 
 test('resolves a username and renders a compact card from short user data', async () => {
   const userData = {
-    resolveUserIdByUsername: async username => {
+    resolveUserIdByUsername: async (username) => {
       assert.equal(username, 'peppy')
       return 42
     },
-    getUserShortStats: async userId => {
+    getUserShortStats: async (userId) => {
       assert.equal(userId, 42)
       return { rank: 1 }
     },
-    getUserShortInfo: async userId => {
+    getUserShortInfo: async (userId) => {
       assert.equal(userId, 42)
       return { username: 'peppy' }
     },
@@ -26,15 +26,24 @@ test('resolves a username and renders a compact card from short user data', asyn
   }
   const handler = new RenderCardHandler(userData, renderer)
 
-  assert.equal(await handler.handle({ username: 'peppy' }, 'compact'), '<svg>compact</svg>')
+  assert.equal(
+    await handler.handle({ username: 'peppy' }, 'compact'),
+    '<svg>compact</svg>',
+  )
 })
 
 test('rejects an unresolved username before reading user data', async () => {
-  const handler = new RenderCardHandler({
-    resolveUserIdByUsername: async () => 0,
-    getUserShortStats: async () => assert.fail('must not load stats'),
-    getUserShortInfo: async () => assert.fail('must not load info'),
-  }, {})
+  const handler = new RenderCardHandler(
+    {
+      resolveUserIdByUsername: async () => 0,
+      getUserShortStats: async () => assert.fail('must not load stats'),
+      getUserShortInfo: async () => assert.fail('must not load info'),
+    },
+    {},
+  )
 
-  await assert.rejects(handler.handle({ username: 'unknown' }, 'full'), /Cannot resolve userID/)
+  await assert.rejects(
+    handler.handle({ username: 'unknown' }, 'full'),
+    /Cannot resolve userID/,
+  )
 })

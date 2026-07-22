@@ -1,11 +1,8 @@
-import { UserCacheService } from "./user-cache-service.mjs"
-import { UserService } from "./user-service.mjs"
-
 export class UserDataService {
   /**
    *
-   * @param {UserService} userService
-   * @param {UserCacheService} userCacheService
+   * @param {import('./user-service.mjs').UserService} userService
+   * @param {import('./user-cache-service.mjs').UserCacheService} userCacheService
    */
   constructor(userService, userCacheService) {
     this.userService = userService
@@ -15,8 +12,7 @@ export class UserDataService {
   /** @param {string} username @returns {Promise<number>} */
   async resolveUserIdByUsername(username) {
     const cachedId = await this.userCacheService.getId(username)
-    if (cachedId !== null)
-      return cachedId
+    if (cachedId !== null) return cachedId
 
     const user = await this.fetchAndUpdateCachedUserByUsername(username)
     return user.id
@@ -26,8 +22,7 @@ export class UserDataService {
   async getUserShortStats(userId) {
     const cachedStats = await this.userCacheService.getShortStats(userId)
     console.log('Cached stats', cachedStats)
-    if (cachedStats !== null)
-      return cachedStats
+    if (cachedStats !== null) return cachedStats
 
     await this.fetchAndUpdateCachedUserById(userId)
     console.log('Stats updated')
@@ -40,8 +35,7 @@ export class UserDataService {
   async getUserShortInfo(userId) {
     const cachedInfo = await this.userCacheService.getShortInfo(userId)
     console.log('Cached stats', cachedInfo)
-    if (cachedInfo !== null)
-      return cachedInfo
+    if (cachedInfo !== null) return cachedInfo
 
     await this.fetchAndUpdateCachedUserById(userId)
     console.log('Stats updated')
@@ -52,16 +46,16 @@ export class UserDataService {
 
   /** @param {string} username @returns {Promise<import('./user-service.mjs').OsuUser>} */
   async fetchAndUpdateCachedUserByUsername(username) {
-    const user = await this.userService.getByUsername(username);
+    const user = await this.userService.getByUsername(username)
     await this.updateCachedUser(user)
-    return user;
+    return user
   }
 
   /** @param {number} userId @returns {Promise<import('./user-service.mjs').OsuUser>} */
   async fetchAndUpdateCachedUserById(userId) {
-    const user = await this.userService.getById(userId);
+    const user = await this.userService.getById(userId)
     await this.updateCachedUser(user)
-    return user;
+    return user
   }
 
   /** @param {import('./user-service.mjs').OsuUser} user */

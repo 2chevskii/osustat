@@ -1,13 +1,12 @@
 import { readFile, stat } from 'node:fs/promises'
 import { join } from 'node:path'
 import Handlebars from 'handlebars'
-import { CardTemplateCache } from './card-template-cache.mjs'
 
 /** @typedef {import('./compiled-template-cache.mjs').CardTemplate} CardTemplate */
 
 export class CardTemplateProvider {
   /**
-   * @param {CardTemplateCache} templateCache
+   * @param {import('./card-template-cache.mjs').CardTemplateCache} templateCache
    */
   constructor(templateCache) {
     this.cache = templateCache
@@ -16,8 +15,7 @@ export class CardTemplateProvider {
   /** @param {string} templateName @returns {Promise<CardTemplate>} */
   async get(templateName) {
     const cachedTemplate = await this.getCached(templateName)
-    if (cachedTemplate !== null)
-      return cachedTemplate
+    if (cachedTemplate !== null) return cachedTemplate
 
     const templateSource = await this.loadFromFs(templateName)
     const compiledTemplate = Handlebars.compile(templateSource)
@@ -44,18 +42,17 @@ export class CardTemplateProvider {
   /** @param {string} templateSource @returns {CardTemplate} */
   compileTemplate(templateSource) {
     const template = Handlebars.compile(templateSource, { strict: true })
-    return template;
+    return template
   }
 
   /** @param {string} templateName @returns {Promise<string>} */
   async loadFromFs(templateName) {
     const path = this.getTemplatePath(templateName)
     const fStat = await stat(path)
-    if (!fStat.isFile())
-      throw new Error('File does not exist: ' + path)
+    if (!fStat.isFile()) throw new Error('File does not exist: ' + path)
 
     const templateSource = await readFile(path, { encoding: 'utf-8' })
-    return templateSource;
+    return templateSource
   }
 
   /** @param {string} templateName @returns {string} */

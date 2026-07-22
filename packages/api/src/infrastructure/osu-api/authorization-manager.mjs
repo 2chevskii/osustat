@@ -1,9 +1,7 @@
-import { OsuApiClient } from './client.mjs'
-
 /** @typedef {{ clientId?: string | undefined, clientSecret?: string | undefined }} OsuApiCredentials */
 
 export class OsuApiAuthorizationManager {
-  /** @param {OsuApiClient} osuApiClient @param {OsuApiCredentials} credentials */
+  /** @param {import('./client.mjs').OsuApiClient} osuApiClient @param {OsuApiCredentials} credentials */
   constructor(osuApiClient, { clientId, clientSecret }) {
     this.api = osuApiClient
     this.api.setAuthorizationManager(this)
@@ -19,16 +17,18 @@ export class OsuApiAuthorizationManager {
   }
 
   async ensureAuthorized() {
-    if (this.isAuthorized())
-      return
+    if (this.isAuthorized()) return
 
     await this.authorize()
   }
 
   async authorize() {
-    const { accessToken, expiresIn } = await this.api.getToken(this.clientId, this.clientSecret)
+    const { accessToken, expiresIn } = await this.api.getToken(
+      this.clientId,
+      this.clientSecret,
+    )
     this.accessToken = accessToken
-    this.tokenExpiresAt = Date.now() + (expiresIn * 1000)
+    this.tokenExpiresAt = Date.now() + expiresIn * 1000
   }
 
   /** @param {RequestInit} requestInit */

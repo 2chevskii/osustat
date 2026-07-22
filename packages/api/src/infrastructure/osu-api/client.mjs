@@ -21,7 +21,7 @@ export class OsuApiClient {
 
   /** @param {string | undefined} clientId @param {string | undefined} clientSecret @returns {Promise<AccessToken>} */
   async getToken(clientId, clientSecret) {
-    const requestUri = new URL('/oauth/token', OSU_API_HOST);
+    const requestUri = new URL('/oauth/token', OSU_API_HOST)
     const response = await fetch(requestUri, {
       method: 'POST',
       headers: {
@@ -33,7 +33,7 @@ export class OsuApiClient {
         client_secret: clientSecret,
         grant_type: 'client_credentials',
         scope: 'public',
-      })
+      }),
     })
 
     if (response.status !== 200) {
@@ -51,7 +51,8 @@ export class OsuApiClient {
   /** @param {string | number} usernameOrId @returns {Promise<unknown>} */
   async getUser(usernameOrId) {
     console.log('Authenticating')
-    if (!this.authorizationManager) throw new Error('Authorization manager is not configured')
+    if (!this.authorizationManager)
+      throw new Error('Authorization manager is not configured')
     await this.authorizationManager.ensureAuthorized()
     console.log('Authenticated successfully!')
     const requestUri = this.buildUri(`/users/${usernameOrId}`)
@@ -62,12 +63,17 @@ export class OsuApiClient {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-      }
+      },
     }
     this.authorizationManager.enrichHeaders(requestInit)
     const response = await fetch(requestUri, requestInit)
 
-    console.log('Fetch response', response.status, response.statusText, response.headers)
+    console.log(
+      'Fetch response',
+      response.status,
+      response.statusText,
+      response.headers,
+    )
 
     const responseBody = await response.json()
     return responseBody
