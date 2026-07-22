@@ -1,3 +1,5 @@
+import { Resvg } from '@resvg/resvg-js'
+
 export class CardRenderer {
   constructor(templateProvider) {
     this.templateProvider = templateProvider
@@ -32,6 +34,10 @@ export class CardRenderer {
       highest_rank: formatNumber(shortStats.highestRank),
       joined_at: new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(new Date(shortUserInfo.joinedAt)),
     })
+  }
+
+  renderPng(svg) {
+    return new Resvg(svg).render().asPng()
   }
 }
 

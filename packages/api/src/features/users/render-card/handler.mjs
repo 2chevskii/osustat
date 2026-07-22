@@ -38,4 +38,9 @@ export class RenderCardHandler {
     }
     return svg
   }
+
+  async handlePng(userIdentifier, cardSize) {
+    const svg = await this.handle(userIdentifier, cardSize)
+    return this.renderer.renderPng(svg)
+  }
 }

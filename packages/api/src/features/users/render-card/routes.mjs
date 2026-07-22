@@ -1,23 +1,33 @@
-export const renderCardByUsernameRoute = handler => async (request, reply) => {
+export const renderCardByUsernameRoute = (handler, format = 'svg') => async (request, reply) => {
   const { username, size } = request.params
   validateSize(size)
   validateUsername(username)
-  const svg = await handler.handle({ username }, size)
+  const card = await renderCard(handler, { username }, size, format)
   reply.headers({
-    'Content-Type': 'text/html; charset=utf-8'
+    'Content-Type': contentTypeFor(format)
   })
-  reply.send(svg)
+  reply.send(card)
 }
 
-export const renderCardByIdRoute = handler => async (request, reply) => {
+export const renderCardByIdRoute = (handler, format = 'svg') => async (request, reply) => {
   const { id, size } = request.params
   validateSize(size)
   const numericId = parseAndValidateId(id)
-  const svg = await handler.handle({ id: numericId }, size)
+  const card = await renderCard(handler, { id: numericId }, size, format)
   reply.headers({
-    'Content-Type': 'text/html; charset=utf-8'
+    'Content-Type': contentTypeFor(format)
   })
-  reply.send(svg)
+  reply.send(card)
+}
+
+async function renderCard(handler, identifier, size, format) {
+  return format === 'png'
+    ? handler.handlePng(identifier, size)
+    : handler.handle(identifier, size)
+}
+
+function contentTypeFor(format) {
+  return format === 'png' ? 'image/png' : 'image/svg+xml; charset=utf-8'
 }
 
 function validateSize(size) {
