@@ -5,7 +5,12 @@ export class CardRenderer {
 
   async renderCompact(shortStats, shortUserInfo) {
     const template = await this.templateProvider.get('compact')
-    const svg = template({ global_rank: shortStats.rank, pp_count: shortStats.pp, username: shortUserInfo.username })
+    const svg = template({
+      global_rank: shortStats.rank,
+      pp_count: shortStats.pp,
+      username: shortUserInfo.username,
+      avatar_url: shortUserInfo.avatarUrl,
+    })
     return svg
   }
 }
