@@ -14,5 +14,9 @@
   },
   "compilerOptions": {
     "strict": true,
+    "checkJs": true,
+    "types": [
+      "node"
+    ]
   }
 }
