@@ -5,6 +5,9 @@
   "main": "src/server.mjs",
   "scripts": {
     "start": "node .",
+    "test": "node --test",
+    "test:unit": "node --test test/unit/*.test.mjs",
+    "test:integration": "node --test test/integration/*.test.mjs",
     "typecheck": "tsc --noEmit -p jsconfig.json"
   },
   "keywords": [],
@@ -18,7 +21,9 @@
     "redis": "^6.1.0"
   },
   "devDependencies": {
+    "@testcontainers/redis": "^12.0.4",
     "@types/node": "^26.1.1",
+    "testcontainers": "^12.0.4",
     "typescript": "^6.0.3"
   }
 }

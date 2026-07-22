@@ -38,7 +38,7 @@ export class CardTemplateCache {
 
   /** @param {string} templateName @param {string} templateSource */
   async setToRedisCache(templateName, templateSource) {
-    await this.redis.setEx(templateName, 1800, templateSource);
+    await this.redis.setEx(this.getRedisKey(templateName), 1800, templateSource);
   }
 
   /** @param {string} templateName */
