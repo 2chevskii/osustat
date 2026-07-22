@@ -1,6 +1,5 @@
 import dotenv from 'dotenv'
-import Fastify from 'fastify'
-import { App } from './app/index.mjs'
+import { App } from './app/app.mjs'
 
 dotenv.config({ path: '.env.local' });
 

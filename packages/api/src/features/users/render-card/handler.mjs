@@ -1,4 +1,11 @@
+import { UserDataService } from "../shared/user-data-service.mjs"
+import { CardRenderer } from "./templates/card-renderer.mjs"
+
 export class RenderCardHandler {
+  /**
+   * @param {UserDataService} userDataService
+   * @param {CardRenderer} cardRenderer
+   */
   constructor(userDataService, cardRenderer) {
     this.userDataService = userDataService
     this.renderer = cardRenderer
@@ -16,13 +23,14 @@ export class RenderCardHandler {
     }
     else return
 
-
     const shortStats = await this.userDataService.getUserShortStats(userId)
     console.log('Got user short stats', shortStats)
+    const shortUserInfo = await this.userDataService.getUserShortInfo(userId)
+    console.log('Got user short info', shortUserInfo)
 
     let svg
     if (cardSize === 'compact') {
-      svg = await this.renderer.renderCompact(shortStats)
+      svg = await this.renderer.renderCompact(shortStats, shortUserInfo)
     } else {
       throw new Error('Not implemented')
     }

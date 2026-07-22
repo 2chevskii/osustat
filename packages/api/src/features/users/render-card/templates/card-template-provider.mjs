@@ -52,7 +52,7 @@ export class CardTemplateProvider {
 
   getTemplatePath(templateName) {
     const assetsDir = join(import.meta.dirname, 'assets')
-    const path = join(assetsDir, templateName + '.svg.hb')
+    const path = join(assetsDir, templateName + '.svg.hbs')
     return path
   }
 }

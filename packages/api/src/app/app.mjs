@@ -1,6 +1,5 @@
 import Fastify from 'fastify'
 import { registerHealthEndpoint } from '../health/routes.mjs'
-import { registerHelloWorldEndpoint } from '../hello-world/routes.mjs';
 import { OsuApiClient } from '../infrastructure/osu-api/client.mjs';
 import { OsuApiAuthorizationManager } from '../infrastructure/osu-api/authorization-manager.mjs';
 import { playersPlugin } from '../features/users/players-plugin.mjs';
@@ -14,9 +13,14 @@ import { CardTemplateCache } from '../features/users/render-card/templates/card-
 import { CompiledTemplateCache } from '../features/users/render-card/templates/compiled-template-cache.mjs';
 import { CardRenderer } from '../features/users/render-card/templates/card-renderer.mjs';
 import cron from 'node-cron'
+import pino from 'pino'
 
 export class App {
   constructor({ port, osuClientId, osuClientSecret } = {}) {
+    this.logger = pino({ level: 'trace', browser: false })
+
+    this.logger.debug('Initializing App...')
+
     this.port = port;
     this.fastify = Fastify({ logger: true })
     this.redis = createRedisClient()
@@ -43,12 +47,11 @@ export class App {
       this.compiledTemplateCache.evictExpiredTemplates()
     })
     await this.redis.connect()
-    await this.fastify.listen({ port: this.port ?? 3001 })
+    await this.fastify.listen({ port: this.port ?? 3001, host: '0.0.0.0' })
   }
 
   registerEndpoints() {
     this.fastify.register(registerHealthEndpoint)
-    this.fastify.register(registerHelloWorldEndpoint)
 
     const cardTemplateProvider = new CardTemplateProvider(new CardTemplateCache(this.redis, this.compiledTemplateCache))
     const cardRenderer = new CardRenderer(cardTemplateProvider)

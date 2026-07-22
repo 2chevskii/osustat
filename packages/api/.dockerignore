@@ -1,0 +1,5 @@
+node_modules/
+Dockerfile
+jsconfig.json
+.dockerignore
+docker-compose.yaml

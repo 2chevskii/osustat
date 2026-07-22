@@ -1,4 +1,12 @@
+import { UserCacheService } from "./user-cache-service.mjs"
+import { UserService } from "./user-service.mjs"
+
 export class UserDataService {
+  /**
+   *
+   * @param {UserService} userService
+   * @param {UserCacheService} userCacheService
+   */
   constructor(userService, userCacheService) {
     this.userService = userService
     this.userCacheService = userCacheService
@@ -22,6 +30,17 @@ export class UserDataService {
     await this.fetchAndUpdateCachedUserById(userId)
     console.log('Stats updated')
     return await this.userCacheService.getShortStats(userId)
+  }
+
+  async getUserShortInfo(userId) {
+    const cachedInfo = await this.userCacheService.getShortInfo(userId)
+    console.log('Cached stats', cachedInfo)
+    if (cachedInfo !== null)
+      return cachedInfo
+
+    await this.fetchAndUpdateCachedUserById(userId)
+    console.log('Stats updated')
+    return await this.userCacheService.getShortInfo(userId)
   }
 
   async fetchAndUpdateCachedUserByUsername(username) {
