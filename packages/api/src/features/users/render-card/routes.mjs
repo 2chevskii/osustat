@@ -2,16 +2,22 @@ export const renderCardByUsernameRoute = handler => async (request, reply) => {
   const { username, size } = request.params
   validateSize(size)
   validateUsername(username)
-  const shortStats = await handler.handle({ username }, size)
-  reply.send(shortStats)
+  const svg = await handler.handle({ username }, size)
+  reply.headers({
+    'Content-Type': 'text/html; charset=utf-8'
+  })
+  reply.send(svg)
 }
 
 export const renderCardByIdRoute = handler => async (request, reply) => {
   const { id, size } = request.params
   validateSize(size)
   const numericId = parseAndValidateId(id)
-  const shortStats = await handler.handle({ id: numericId }, size)
-  await reply.send(shortStats)
+  const svg = await handler.handle({ id: numericId }, size)
+  reply.headers({
+    'Content-Type': 'text/html; charset=utf-8'
+  })
+  reply.send(svg)
 }
 
 function validateSize(size) {

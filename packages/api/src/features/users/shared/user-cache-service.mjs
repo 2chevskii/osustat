@@ -1,3 +1,5 @@
+const USERID_EXPIRATION_SECONDS = 3600
+
 export class UserCacheService {
   /**
    * @param {ReturnType<import('redis').createClient>} redisClient
@@ -25,8 +27,8 @@ export class UserCacheService {
 
   async setId(username, userId) {
     const key = this.keys.id(username)
-    await this.redis.setEx(key, this.expirationTimeSeconds, username)
-    console.log('UserCacheService.setId', { username, userId, key, expirationTimeSeconds: this.expirationTimeSeconds, username })
+    await this.redis.setEx(key, USERID_EXPIRATION_SECONDS, username)
+    console.log('UserCacheService.setId', { username, userId, key, username })
   }
 
   async getShortInfo(userId) {

@@ -1,6 +1,7 @@
 export class RenderCardHandler {
-  constructor(userDataService) {
+  constructor(userDataService, cardRenderer) {
     this.userDataService = userDataService
+    this.renderer = cardRenderer
   }
 
   async handle(userIdentifier, cardSize) {
@@ -18,6 +19,13 @@ export class RenderCardHandler {
 
     const shortStats = await this.userDataService.getUserShortStats(userId)
     console.log('Got user short stats', shortStats)
-    return shortStats
+
+    let svg
+    if (cardSize === 'compact') {
+      svg = await this.renderer.renderCompact(shortStats)
+    } else {
+      throw new Error('Not implemented')
+    }
+    return svg
   }
 }
