@@ -13,8 +13,16 @@
     ]
   },
   "compilerOptions": {
+    "allowJs": true,
     "strict": true,
     "checkJs": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "types": [
       "node"
     ]

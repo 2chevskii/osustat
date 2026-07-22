@@ -1,16 +1,19 @@
 import { readFile, stat } from 'node:fs/promises'
 import { join } from 'node:path'
-import { fileURLToPath } from 'node:url'
 import Handlebars from 'handlebars'
+import { CardTemplateCache } from './card-template-cache.mjs'
+
+/** @typedef {import('./compiled-template-cache.mjs').CardTemplate} CardTemplate */
 
 export class CardTemplateProvider {
   /**
-   * @param {ReturnType<import('redis').createClient>} redisClient
+   * @param {CardTemplateCache} templateCache
    */
   constructor(templateCache) {
     this.cache = templateCache
   }
 
+  /** @param {string} templateName @returns {Promise<CardTemplate>} */
   async get(templateName) {
     const cachedTemplate = await this.getCached(templateName)
     if (cachedTemplate !== null)
@@ -23,11 +26,14 @@ export class CardTemplateProvider {
     return compiledTemplate
   }
 
+  /** @param {string} templateName @returns {Promise<CardTemplate | null>} */
   async getCached(templateName) {
     const cachedTemplate = await this.cache.get(templateName)
     if (typeof cachedTemplate === 'string') {
+      /** @type {CardTemplate} */
       const compiledTemplate = Handlebars.compile(cachedTemplate)
       await this.cache.set(templateName, cachedTemplate, compiledTemplate)
+      return compiledTemplate
     } else if (typeof cachedTemplate === 'function') {
       return cachedTemplate
     } else {
@@ -35,11 +41,13 @@ export class CardTemplateProvider {
     }
   }
 
+  /** @param {string} templateSource @returns {CardTemplate} */
   compileTemplate(templateSource) {
     const template = Handlebars.compile(templateSource, { strict: true })
     return template;
   }
 
+  /** @param {string} templateName @returns {Promise<string>} */
   async loadFromFs(templateName) {
     const path = this.getTemplatePath(templateName)
     const fStat = await stat(path)
@@ -50,6 +58,7 @@ export class CardTemplateProvider {
     return templateSource;
   }
 
+  /** @param {string} templateName @returns {string} */
   getTemplatePath(templateName) {
     const assetsDir = join(import.meta.dirname, 'assets')
     const path = join(assetsDir, templateName + '.svg.hbs')

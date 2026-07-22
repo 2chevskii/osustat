@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/server.mjs",
   "scripts": {
-    "start": "node ."
+    "start": "node .",
+    "typecheck": "tsc --noEmit -p jsconfig.json"
   },
   "keywords": [],
   "type": "module",
@@ -17,6 +18,7 @@
     "redis": "^6.1.0"
   },
   "devDependencies": {
-    "@types/node": "^26.1.1"
+    "@types/node": "^26.1.1",
+    "typescript": "^6.0.3"
   }
 }

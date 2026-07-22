@@ -1,10 +1,16 @@
 import { Resvg } from '@resvg/resvg-js'
+import { CardTemplateProvider } from './card-template-provider.mjs'
+
+/** @typedef {import('../../shared/user-cache-service.mjs').ShortStats} ShortStats */
+/** @typedef {import('../../shared/user-cache-service.mjs').ShortUserInfo} ShortUserInfo */
 
 export class CardRenderer {
+  /** @param {CardTemplateProvider} templateProvider */
   constructor(templateProvider) {
     this.templateProvider = templateProvider
   }
 
+  /** @param {ShortStats} shortStats @param {ShortUserInfo} shortUserInfo @returns {Promise<string>} */
   async renderCompact(shortStats, shortUserInfo) {
     const template = await this.templateProvider.get('compact')
     const svg = template({
@@ -16,6 +22,7 @@ export class CardRenderer {
     return svg
   }
 
+  /** @param {ShortStats} shortStats @param {ShortUserInfo} shortUserInfo @returns {Promise<string>} */
   async renderFull(shortStats, shortUserInfo) {
     const template = await this.templateProvider.get('full')
     return template({
@@ -36,11 +43,13 @@ export class CardRenderer {
     })
   }
 
+  /** @param {string} svg */
   renderPng(svg) {
     return new Resvg(svg).render().asPng()
   }
 }
 
+/** @param {number | undefined} value */
 function formatNumber(value) {
   return new Intl.NumberFormat('en-US').format(value ?? 0)
 }

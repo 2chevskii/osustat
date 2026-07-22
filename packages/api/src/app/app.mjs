@@ -15,9 +15,12 @@ import { CardRenderer } from '../features/users/render-card/templates/card-rende
 import cron from 'node-cron'
 import pino from 'pino'
 
+/** @typedef {{ port?: number | undefined, osuClientId?: string | undefined, osuClientSecret?: string | undefined }} AppOptions */
+
 export class App {
+  /** @param {AppOptions} [options] */
   constructor({ port, osuClientId, osuClientSecret } = {}) {
-    this.logger = pino({ level: 'trace', browser: false })
+    this.logger = pino({ level: 'trace' })
 
     this.logger.debug('Initializing App...')
 

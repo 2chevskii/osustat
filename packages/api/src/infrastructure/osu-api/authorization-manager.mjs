@@ -1,4 +1,9 @@
+import { OsuApiClient } from './client.mjs'
+
+/** @typedef {{ clientId?: string | undefined, clientSecret?: string | undefined }} OsuApiCredentials */
+
 export class OsuApiAuthorizationManager {
+  /** @param {OsuApiClient} osuApiClient @param {OsuApiCredentials} credentials */
   constructor(osuApiClient, { clientId, clientSecret }) {
     this.api = osuApiClient
     this.api.setAuthorizationManager(this)
@@ -26,7 +31,11 @@ export class OsuApiAuthorizationManager {
     this.tokenExpiresAt = Date.now() + (expiresIn * 1000)
   }
 
+  /** @param {RequestInit} requestInit */
   enrichHeaders(requestInit) {
-    requestInit.headers['Authorization'] = 'Bearer ' + this.accessToken
+    if (!this.accessToken) throw new Error('Access token is missing')
+    const headers = new Headers(requestInit.headers)
+    headers.set('Authorization', 'Bearer ' + this.accessToken)
+    requestInit.headers = headers
   }
 }

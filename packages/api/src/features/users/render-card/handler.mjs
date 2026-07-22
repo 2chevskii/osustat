@@ -1,6 +1,9 @@
 import { UserDataService } from "../shared/user-data-service.mjs"
 import { CardRenderer } from "./templates/card-renderer.mjs"
 
+/** @typedef {{ id: number } | { username: string }} UserIdentifier */
+/** @typedef {'compact' | 'full'} CardSize */
+
 export class RenderCardHandler {
   /**
    * @param {UserDataService} userDataService
@@ -11,6 +14,7 @@ export class RenderCardHandler {
     this.renderer = cardRenderer
   }
 
+  /** @param {UserIdentifier} userIdentifier @param {CardSize} cardSize @returns {Promise<string>} */
   async handle(userIdentifier, cardSize) {
     let userId = 0
 
@@ -21,7 +25,7 @@ export class RenderCardHandler {
         throw new Error('Cannot resolve userID by username')
       }
     }
-    else return
+    else throw new Error('Invalid user identifier')
 
     const shortStats = await this.userDataService.getUserShortStats(userId)
     console.log('Got user short stats', shortStats)
@@ -39,6 +43,7 @@ export class RenderCardHandler {
     return svg
   }
 
+  /** @param {UserIdentifier} userIdentifier @param {CardSize} cardSize */
   async handlePng(userIdentifier, cardSize) {
     const svg = await this.handle(userIdentifier, cardSize)
     return this.renderer.renderPng(svg)

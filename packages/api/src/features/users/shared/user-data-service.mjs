@@ -12,6 +12,7 @@ export class UserDataService {
     this.userCacheService = userCacheService
   }
 
+  /** @param {string} username @returns {Promise<number>} */
   async resolveUserIdByUsername(username) {
     const cachedId = await this.userCacheService.getId(username)
     if (cachedId !== null)
@@ -21,6 +22,7 @@ export class UserDataService {
     return user.id
   }
 
+  /** @param {number} userId @returns {Promise<import('./user-cache-service.mjs').ShortStats>} */
   async getUserShortStats(userId) {
     const cachedStats = await this.userCacheService.getShortStats(userId)
     console.log('Cached stats', cachedStats)
@@ -29,9 +31,12 @@ export class UserDataService {
 
     await this.fetchAndUpdateCachedUserById(userId)
     console.log('Stats updated')
-    return await this.userCacheService.getShortStats(userId)
+    const stats = await this.userCacheService.getShortStats(userId)
+    if (stats === null) throw new Error('Short stats were not cached')
+    return stats
   }
 
+  /** @param {number} userId @returns {Promise<import('./user-cache-service.mjs').ShortUserInfo>} */
   async getUserShortInfo(userId) {
     const cachedInfo = await this.userCacheService.getShortInfo(userId)
     console.log('Cached stats', cachedInfo)
@@ -40,21 +45,26 @@ export class UserDataService {
 
     await this.fetchAndUpdateCachedUserById(userId)
     console.log('Stats updated')
-    return await this.userCacheService.getShortInfo(userId)
+    const info = await this.userCacheService.getShortInfo(userId)
+    if (info === null) throw new Error('Short user info was not cached')
+    return info
   }
 
+  /** @param {string} username @returns {Promise<import('./user-service.mjs').OsuUser>} */
   async fetchAndUpdateCachedUserByUsername(username) {
     const user = await this.userService.getByUsername(username);
     await this.updateCachedUser(user)
     return user;
   }
 
+  /** @param {number} userId @returns {Promise<import('./user-service.mjs').OsuUser>} */
   async fetchAndUpdateCachedUserById(userId) {
     const user = await this.userService.getById(userId);
     await this.updateCachedUser(user)
     return user;
   }
 
+  /** @param {import('./user-service.mjs').OsuUser} user */
   async updateCachedUser(user) {
     const shortInfo = {
       id: user.id,
@@ -76,7 +86,7 @@ export class UserDataService {
       playTime: user.statistics.play_time,
       level: user.statistics.level.current,
       highestRank: user.statistics.rank_highest?.rank,
-      accuracy: user.statistics.hit_accuracy ?? user.statistics.accuracy,
+      accuracy: user.statistics.hit_accuracy ?? user.statistics.accuracy ?? 0,
     }
 
     await this.userCacheService.setId(user.username, user.id)

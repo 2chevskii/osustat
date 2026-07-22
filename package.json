@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "typecheck": "npm --prefix packages/api run typecheck"
+  },
   "dependencies": {
     "pino": "^10.3.1"
   }
