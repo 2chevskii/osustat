@@ -8,7 +8,7 @@ if (tags.length === 0) {
 
 const buildArgs = ['build']
 for (const tag of tags) buildArgs.push('--tag', tag)
-buildArgs.push('packages/api')
+buildArgs.push('--file', 'packages/api/Dockerfile', '.')
 execFileSync('docker', buildArgs, { stdio: 'inherit' })
 
 for (const tag of tags) {

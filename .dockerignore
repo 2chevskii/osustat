@@ -1,0 +1,9 @@
+node_modules/
+.git/
+.github/
+.vscode/
+packages/*/node_modules/
+packages/*/test/
+packages/frontend/
+*.local
+*.log

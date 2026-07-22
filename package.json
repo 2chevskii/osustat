@@ -1,13 +1,19 @@
 {
+  "name": "osucard",
+  "private": true,
+  "workspaces": [
+    "packages/api",
+    "packages/frontend"
+  ],
   "scripts": {
-    "build": "npm --prefix packages/api run build && npm --prefix packages/frontend run build",
-    "dev:api": "npm --prefix packages/api run dev",
-    "dev:frontend": "npm --prefix packages/frontend run dev",
+    "build": "npm run build --workspaces --if-present",
+    "dev:api": "npm run dev --workspace=api",
+    "dev:frontend": "npm run dev --workspace=osucard-frontend",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "lint": "eslint packages scripts",
-    "test": "npm --prefix packages/api run test",
-    "typecheck": "npm --prefix packages/api run typecheck"
+    "test": "npm run test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspace=api"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -15,8 +21,5 @@
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.7.0",
     "prettier": "^3.8.3"
-  },
-  "dependencies": {
-    "pino": "^10.3.1"
   }
 }
