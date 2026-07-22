@@ -62,14 +62,21 @@ export class UserDataService {
       avatarUrl: user.avatar_url,
       isSupporter: user.is_supporter,
       countryCode: user.country_code,
+      followerCount: user.follower_count,
+      joinedAt: user.join_date,
     }
 
     const shortStats = {
       rank: user.statistics.global_rank,
+      countryRank: user.statistics.country_rank,
       pp: user.statistics.pp,
       rankedScore: user.statistics.ranked_score,
+      totalScore: user.statistics.total_score,
       playCount: user.statistics.play_count,
-      accuracy: user.statistics.accuracy,
+      playTime: user.statistics.play_time,
+      level: user.statistics.level.current,
+      highestRank: user.statistics.rank_highest?.rank,
+      accuracy: user.statistics.hit_accuracy ?? user.statistics.accuracy,
     }
 
     await this.userCacheService.setId(user.username, user.id)

@@ -31,6 +31,8 @@ export class RenderCardHandler {
     let svg
     if (cardSize === 'compact') {
       svg = await this.renderer.renderCompact(shortStats, shortUserInfo)
+    } else if (cardSize === 'full') {
+      svg = await this.renderer.renderFull(shortStats, shortUserInfo)
     } else {
       throw new Error('Not implemented')
     }
