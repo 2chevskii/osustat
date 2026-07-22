@@ -1,5 +1,3 @@
-import hb from 'handlebars'
-
 export class CardRenderer {
   constructor(templateProvider) {
     this.templateProvider = templateProvider
