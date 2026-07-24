@@ -6,64 +6,211 @@
   xmlns='http://www.w3.org/2000/svg'
   xmlns:xlink='http://www.w3.org/1999/xlink'
 >
-  <rect width='96' height='36' rx='2' fill='url(#paint0_linear_1_5)' />
-  <rect x='5' y='6' width='24' height='24' rx='12' fill='url(#pattern0_1_5)' />
-  <text
-    fill='#DEAA1A'
-    style='white-space: pre'
-    xml:space='preserve'
-    font-family='Montserrat'
-    font-size='8'
-    font-weight='bold'
-    letter-spacing='0em'
-  ><tspan x='34.0312' y='10.868'>{{username}}</tspan></text>
-  <text
-    fill='#BFBFBF'
-    style='white-space: pre'
-    xml:space='preserve'
-    font-family='Montserrat'
-    font-size='8'
-    font-weight='bold'
-    letter-spacing='0em'
-  ><tspan x='34.457' y='20.868'>#{{global_rank}}</tspan></text>
-  <text
-    fill='#EF60A0'
-    style='white-space: pre'
-    xml:space='preserve'
-    font-family='Montserrat'
-    font-size='8'
-    font-weight='bold'
-    letter-spacing='0em'
-  ><tspan x='34.4766' y='30.868'>{{pp_count}}pp</tspan></text>
+  <g filter='url(#filter0_i_48_16)'>
+    <rect width='96' height='36' rx='4' fill='url(#paint0_linear_48_16)' />
+    <rect
+      x='0.25'
+      y='0.25'
+      width='95.5'
+      height='35.5'
+      rx='3.75'
+      stroke='#FFB8E6'
+      stroke-opacity='0.22'
+      stroke-width='0.5'
+    />
+    <g filter='url(#filter1_d_48_16)'>
+      <rect
+        x='5'
+        y='6'
+        width='24'
+        height='24'
+        rx='12'
+        fill='url(#pattern0_48_16)'
+      />
+      <rect
+        x='5.4'
+        y='6.4'
+        width='23.2'
+        height='23.2'
+        rx='11.6'
+        stroke='#FFD1F0'
+        stroke-opacity='0.9'
+        stroke-width='0.8'
+      />
+    </g>
+    <g clip-path='url(#clip0_48_16)'>
+      <path
+        d='M6.41667 8.97917C6.41667 8.74733 6.487 8.52095 6.61836 8.32993C6.74972 8.1389 6.93594 7.99222 7.15242 7.90925C7.3689 7.82628 7.60545 7.81093 7.83084 7.86522C8.05622 7.91951 8.25984 8.04089 8.41479 8.21333C8.42571 8.225 8.4389 8.23431 8.45356 8.24067C8.46821 8.24703 8.48402 8.25031 8.5 8.25031C8.51598 8.25031 8.53179 8.24703 8.54644 8.24067C8.5611 8.23431 8.57429 8.225 8.58521 8.21333C8.73967 8.03977 8.94334 7.91737 9.16909 7.86242C9.39484 7.80747 9.63198 7.82257 9.84893 7.90573C10.0659 7.98888 10.2524 8.13614 10.3836 8.3279C10.5148 8.51966 10.5844 8.74682 10.5833 8.97917C10.5833 9.45625 10.2708 9.8125 9.95833 10.125L8.81417 11.2319C8.77535 11.2765 8.72748 11.3123 8.67376 11.3369C8.62003 11.3616 8.56168 11.3746 8.50256 11.3749C8.44344 11.3753 8.38493 11.3631 8.33089 11.3391C8.27686 11.3151 8.22855 11.2799 8.18917 11.2358L7.04167 10.125C6.72917 9.8125 6.41667 9.45833 6.41667 8.97917Z'
+        fill='#FF57A3'
+        stroke='#FFE0F5'
+        stroke-width='0.25'
+        stroke-linecap='round'
+        stroke-linejoin='round'
+      />
+    </g>
+    <g filter='url(#filter2_d_48_16)'>
+      <circle cx='25' cy='26' r='2' fill='#63F273' />
+      <circle cx='25' cy='26' r='1.775' stroke='#FAFFFA' stroke-width='0.45' />
+    </g>
+    <text
+      fill='#FFE07A'
+      style='white-space: pre'
+      xml:space='preserve'
+      font-family='Montserrat'
+      font-size='8'
+      font-weight='bold'
+      letter-spacing='0em'
+    >
+      <tspan x='34.0508' y='10.868'>{{ username }}</tspan>
+    </text>
+    <text
+      fill='#E0D6F5'
+      style='white-space: pre'
+      xml:space='preserve'
+      font-family='Montserrat'
+      font-size='8'
+      font-weight='bold'
+      letter-spacing='0em'
+    >
+      <tspan x='34.457' y='20.868'>#{{ global_rank }}</tspan>
+    </text>
+    <text
+      fill='#FF7ABA'
+      style='white-space: pre'
+      xml:space='preserve'
+      font-family='Montserrat'
+      font-size='8'
+      font-weight='bold'
+      letter-spacing='0em'
+    >
+      <tspan x='34.4766' y='30.868'>{{ pp_count }}pp</tspan>
+    </text>
+  </g>
   <defs>
+    <filter
+      id='filter0_i_48_16'
+      x='0'
+      y='0'
+      width='96'
+      height='36.5'
+      filterUnits='userSpaceOnUse'
+      color-interpolation-filters='sRGB'
+    >
+      <feFlood flood-opacity='0' result='BackgroundImageFix' />
+      <feBlend
+        mode='normal'
+        in='SourceGraphic'
+        in2='BackgroundImageFix'
+        result='shape'
+      />
+      <feColorMatrix
+        in='SourceAlpha'
+        type='matrix'
+        values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0'
+        result='hardAlpha'
+      />
+      <feOffset dy='0.5' />
+      <feGaussianBlur stdDeviation='0.5' />
+      <feComposite in2='hardAlpha' operator='arithmetic' k2='-1' k3='1' />
+      <feColorMatrix
+        type='matrix'
+        values='0 0 0 0 1 0 0 0 0 0.75 0 0 0 0 0.92 0 0 0 0.1 0'
+      />
+      <feBlend mode='normal' in2='shape' result='effect1_innerShadow_48_16' />
+    </filter>
+    <filter
+      id='filter1_d_48_16'
+      x='3'
+      y='5'
+      width='28'
+      height='28'
+      filterUnits='userSpaceOnUse'
+      color-interpolation-filters='sRGB'
+    >
+      <feFlood flood-opacity='0' result='BackgroundImageFix' />
+      <feColorMatrix
+        in='SourceAlpha'
+        type='matrix'
+        values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0'
+        result='hardAlpha'
+      />
+      <feOffset dy='1' />
+      <feGaussianBlur stdDeviation='1' />
+      <feColorMatrix
+        type='matrix'
+        values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4 0'
+      />
+      <feBlend
+        mode='normal'
+        in2='BackgroundImageFix'
+        result='effect1_dropShadow_48_16'
+      />
+      <feBlend
+        mode='normal'
+        in='SourceGraphic'
+        in2='effect1_dropShadow_48_16'
+        result='shape'
+      />
+    </filter>
     <pattern
-      id='pattern0_1_5'
+      id='pattern0_48_16'
       patternContentUnits='objectBoundingBox'
       width='1'
       height='1'
     >
-      <use xlink:href='#avatar_1_5' transform='scale(0.00390625)' />
+      <use xlink:href='#image0_48_16' transform='scale(0.00390625)' />
     </pattern>
+    <filter
+      id='filter2_d_48_16'
+      x='21.5'
+      y='22.5'
+      width='7'
+      height='7'
+      filterUnits='userSpaceOnUse'
+      color-interpolation-filters='sRGB'
+    >
+      <feFlood flood-opacity='0' result='BackgroundImageFix' />
+      <feColorMatrix
+        in='SourceAlpha'
+        type='matrix'
+        values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0'
+        result='hardAlpha'
+      />
+      <feOffset />
+      <feGaussianBlur stdDeviation='0.75' />
+      <feColorMatrix
+        type='matrix'
+        values='0 0 0 0 0.2 0 0 0 0 1 0 0 0 0 0.35 0 0 0 0.45 0'
+      />
+      <feBlend
+        mode='normal'
+        in2='BackgroundImageFix'
+        result='effect1_dropShadow_48_16'
+      />
+      <feBlend
+        mode='normal'
+        in='SourceGraphic'
+        in2='effect1_dropShadow_48_16'
+        result='shape'
+      />
+    </filter>
     <linearGradient
-      id='paint0_linear_1_5'
-      x1='48'
-      y1='0'
-      x2='48'
-      y2='36'
+      id='paint0_linear_48_16'
+      x1='-9.90885'
+      y1='9.55496'
+      x2='54.3344'
+      y2='76.1776'
       gradientUnits='userSpaceOnUse'
     >
-      <stop stop-color='#F763A5' />
-      <stop offset='1' stop-color='#6D2C49' />
+      <stop stop-color='#571A47' />
+      <stop offset='0.52' stop-color='#29123D' />
+      <stop offset='1' stop-color='#0F0A21' />
     </linearGradient>
+    <clipPath id='clip0_48_16'>
+      <rect width='5' height='5' fill='white' transform='translate(6 7)' />
+    </clipPath>
     <image
-      id='avatar_1_5'
-      width='256'
-      height='256'
-      preserveAspectRatio='none'
-      xlink:href='{{avatar_url}}'
-    />
-    <image
-      id='image0_1_5'
+      id='image0_48_16'
       width='256'
       height='256'
       preserveAspectRatio='none'
