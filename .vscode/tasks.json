@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Start dev docker-compose",
+      "label": "api/docker-compose::start",
       "type": "process",
       "command": "docker",
       "args": [
@@ -17,7 +17,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Stop dev docker-compose",
+      "label": "api/docker-compose::stop",
       "type": "process",
       "command": "docker",
       "args": [
@@ -28,7 +28,7 @@
         "${workspaceFolder}/packages/api/docker-compose.yaml",
         "down"
       ],
-      "problemMatcher": []
+      "problemMatcher": [],
     }
   ]
 }

@@ -6,52 +6,73 @@
   "configurations": [
     {
       "type": "node",
-      "name": "Start api",
+      "name": "dev(api)",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "cwd": "${workspaceFolder}/packages/api",
       "console": "integratedTerminal",
       "autoAttachChildProcesses": true,
       "restart": true,
-      "skipFiles": ["<node_internals>/**"]
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     },
     {
       "type": "node",
-      "name": "Start frontend",
+      "name": "dev(cards-frontend)",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "cwd": "${workspaceFolder}/packages/frontend",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "cwd": "${workspaceFolder}/packages/cards-frontend",
       "console": "integratedTerminal",
       "autoAttachChildProcesses": true,
       "restart": true,
-      "skipFiles": ["<node_internals>/**"]
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     },
     {
       "type": "node",
-      "name": "Start api and docker-compose",
+      "name": "dev(api, docker-compose)",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "cwd": "${workspaceFolder}/packages/api",
       "console": "integratedTerminal",
       "autoAttachChildProcesses": true,
       "restart": true,
-      "preLaunchTask": "Start dev docker-compose",
-      "postDebugTask": "Stop dev docker-compose",
-      "skipFiles": ["<node_internals>/**"]
+      "preLaunchTask": "api/docker-compose::start",
+      "postDebugTask": "api/docker-compose::stop",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     }
   ],
   "compounds": [
     {
-      "name": "Start api and frontend",
-      "configurations": ["Start api", "Start frontend"],
+      "name": "dev(api, cards-frontend)",
+      "configurations": [
+        "dev(api)",
+        "dev(cards-frontend)"
+      ],
       "stopAll": true
     },
     {
-      "name": "Start api, frontend and docker-compose",
-      "configurations": ["Start api and docker-compose", "Start frontend"],
+      "name": "dev(*)",
+      "configurations": [
+        "dev(api, docker-compose)",
+        "dev(cards-frontend)"
+      ],
       "stopAll": true
     }
   ]

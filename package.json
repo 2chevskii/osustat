@@ -1,14 +1,14 @@
 {
-  "name": "osucard",
+  "name": "osustat",
   "private": true,
   "workspaces": [
     "packages/api",
-    "packages/frontend"
+    "packages/cards-frontend"
   ],
   "scripts": {
     "build": "npm run build --workspaces --if-present",
-    "dev:api": "npm run dev --workspace=api",
-    "dev:frontend": "npm run dev --workspace=osucard-frontend",
+    "dev:api": "npm run dev --workspace=@osustat/api",
+    "dev:frontend": "npm run dev --workspace=@osustat/frontend",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "lint": "eslint packages scripts",

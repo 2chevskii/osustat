@@ -16,10 +16,7 @@ function cardUrl() {
   const type = selectedIdentifierType()
   const size = document.querySelector('#size').value
   const format = document.querySelector('#format').value
-  const base = document
-    .querySelector('#api-base')
-    .value.trim()
-    .replace(/\/+$/, '')
+  const base = import.meta.env.VITE_API_URL
 
   if (!value || !base) return null
   return `${base}/players/${type}/${encodeURIComponent(value)}/cards/${size}.${format}`
@@ -41,6 +38,7 @@ form.addEventListener('submit', (event) => {
   errorMessage.hidden = true
 
   const url = cardUrl()
+  console.log('card URL:', url)
   if (!url) return
 
   urlDisplay.textContent = url
@@ -62,6 +60,7 @@ preview.addEventListener('load', () => {
 
 copyButton.addEventListener('click', async () => {
   const url = cardUrl()
+  console.log('card URL:', url)
   if (!url) return
 
   try {
