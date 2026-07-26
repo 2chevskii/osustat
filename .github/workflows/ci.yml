@@ -1,116 +1,143 @@
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+  pull_request_review:
+    types:
+      - submitted
 
 env:
-  IMAGE_NAME: ghcr.io/2chevskii/osustat-api
+  IMAGE_MATRIX: >-
+    {"include":[{"name":"api","image_name":"ghcr.io/2chevskii/osustat-api","dockerfile":"packages/api/Dockerfile","local_image":"osustat-api:ci","deployment_variable":"KUBE_API_DEPLOYMENT","container_variable":"KUBE_API_CONTAINER"},{"name":"profile-cards","image_name":"ghcr.io/2chevskii/osustat-profile-cards","dockerfile":"packages/profile-cards/Dockerfile","local_image":"osustat-profile-cards:ci","deployment_variable":"KUBE_PROFILE_CARDS_DEPLOYMENT","container_variable":"KUBE_PROFILE_CARDS_CONTAINER"}]}
+
+permissions:
+  contents: read
 
 jobs:
-  format:
+  check:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        command:
+          - npm run format:check
+          - npm run lint
+          - npm run typecheck
+          - npm test
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          cache: npm
-      - run: npm ci
-      - run: npm run format:check
-
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          cache: npm
-      - run: npm ci
-      - run: npm run lint
-
-  typecheck:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          cache: npm
-      - run: npm ci
-      - run: npm run typecheck
-
-  test:
-    name: Run tests
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          cache: npm
-      - name: Install root dependencies
-        run: npm ci
-      - name: Execute test suite
-        run: npm test
+      - uses: ./.github/actions/setup-workspace
+      - run: ${{ matrix.command }}
 
   build:
-    name: Build applications
-    needs:
-      - format
-      - lint
-      - typecheck
-      - test
+    needs: check
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: ./.github/actions/setup-workspace
+      - run: npm run build
+      - uses: actions/upload-artifact@v7
         with:
-          node-version: 24
-          cache: npm
-      - name: Install root dependencies
-        run: npm ci
-      - name: Build monorepo packages
-        run: npm run build
+          name: profile-cards
+          path: packages/profile-cards/dist
+          if-no-files-found: error
+
+  image_matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - id: matrix
+        run: echo 'matrix=${{ env.IMAGE_MATRIX }}' >> "$GITHUB_OUTPUT"
 
   build_image:
-    name: Build API Docker image
-    needs: build
+    needs:
+      - build
+      - image_matrix
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
+    strategy:
+      matrix: ${{ fromJSON(needs.image_matrix.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v7
-      - name: Build API Docker image
-        run: docker build --file packages/api/Dockerfile --tag osustat-api:ci .
+      - uses: ./.github/actions/build-image
+        with:
+          dockerfile: ${{ matrix.dockerfile }}
+          image: ${{ matrix.local_image }}
+          archive: ${{ github.workspace }}/${{ matrix.name }}-image.tar
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.name }}-image
+          path: ${{ github.workspace }}/${{ matrix.name }}-image.tar
+          if-no-files-found: error
 
-  publish-image:
-    name: Publish API Docker image
-    needs: build_image
+  publish_image:
+    needs:
+      - build_image
+      - image_matrix
     runs-on: ubuntu-latest
-    # GitHub does not grant a writable token to pull requests from forks.
-    if:
-      github.event_name == 'push' || github.event.pull_request.head.repo.full_name ==
-      github.repository
+    strategy:
+      matrix: ${{ fromJSON(needs.image_matrix.outputs.matrix) }}
+    if: >-
+      (github.event_name == 'push' && (github.ref_name == 'master' || github.ref_name == 'develop')) ||
+      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+      (github.event_name == 'pull_request_review' && github.event.review.state == 'approved' &&
+      github.event.review.user.login != github.event.pull_request.user.login &&
+      (github.event.review.author_association == 'OWNER' || github.event.review.author_association == 'MEMBER' ||
+      github.event.review.author_association == 'COLLABORATOR'))
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: ./.github/actions/setup-workspace
         with:
-          node-version: 24
-      - name: Create image tags
-        id: tags
+          install-dependencies: 'false'
+      - id: tags
         env:
+          IMAGE_NAME: ${{ matrix.image_name }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: node scripts/ci/docker-tags.mjs
-      - name: Log in to GitHub Container Registry
-        env:
+      - env:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: echo "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
-      - name: Build and publish API Docker image
+      - uses: actions/download-artifact@v8
+        with:
+          name: ${{ matrix.name }}-image
+          path: ${{ github.workspace }}
+      - uses: ./.github/actions/publish-image
+        with:
+          image: ${{ matrix.local_image }}
+          archive: ${{ github.workspace }}/${{ matrix.name }}-image.tar
+          tags: ${{ steps.tags.outputs.tags }}
+
+  deploy:
+    needs:
+      - publish_image
+      - image_matrix
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref_name == 'master' || github.ref_name == 'develop')
+    environment: ${{ github.ref_name == 'master' && 'production' || 'development' }}
+    concurrency:
+      group: deploy-${{ github.ref_name }}-${{ matrix.name }}
+      cancel-in-progress: false
+    strategy:
+      matrix: ${{ fromJSON(needs.image_matrix.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: image
         env:
-          IMAGE_TAGS: ${{ steps.tags.outputs.tags }}
-        run: node scripts/ci/publish-image.mjs
+          IMAGE_NAME: ${{ matrix.image_name }}
+        run: echo "image=$IMAGE_NAME:${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+      - uses: ./.github/actions/deploy-kubernetes
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        with:
+          image: ${{ steps.image.outputs.image }}
+          context: ${{ vars.KUBE_CONTEXT }}
+          namespace: ${{ vars.KUBE_NAMESPACE }}
+          deployment: ${{ vars[matrix.deployment_variable] }}
+          container: ${{ vars[matrix.container_variable] }}
+          kubectl-version: ${{ vars.KUBECTL_VERSION }}

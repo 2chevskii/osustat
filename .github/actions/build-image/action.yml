@@ -1,0 +1,21 @@
+name: build-image
+description: Build a Docker image and save it as a portable archive.
+
+inputs:
+  dockerfile:
+    description: Dockerfile path.
+    required: true
+  image:
+    description: Local Docker image name.
+    required: true
+  archive:
+    description: Output path for the Docker image archive.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - run: docker build --file "$INPUT_DOCKERFILE" --tag "$INPUT_IMAGE" .
+      shell: bash
+    - run: docker image save --output "$INPUT_ARCHIVE" "$INPUT_IMAGE"
+      shell: bash

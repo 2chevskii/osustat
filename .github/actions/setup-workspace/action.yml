@@ -1,0 +1,19 @@
+name: setup-workspace
+description: Set up Node and optionally install workspace dependencies.
+
+inputs:
+  install-dependencies:
+    description: Whether to install npm dependencies.
+    required: false
+    default: 'true'
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v7
+      with:
+        node-version: 24
+        cache: npm
+    - if: inputs.install-dependencies == 'true'
+      run: npm ci
+      shell: bash

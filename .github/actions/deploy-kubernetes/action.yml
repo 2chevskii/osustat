@@ -1,0 +1,59 @@
+name: deploy-kubernetes
+description: Update a Kubernetes Deployment image and wait for its rollout.
+
+inputs:
+  image:
+    description: Fully qualified immutable image reference.
+    required: true
+  context:
+    description: Kubeconfig context to target.
+    required: true
+  namespace:
+    description: Kubernetes namespace containing the Deployment.
+    required: true
+  deployment:
+    description: Deployment resource name.
+    required: true
+  container:
+    description: Container name inside the Deployment.
+    required: true
+  kubectl-version:
+    description: kubectl version compatible with the target cluster.
+    required: true
+  rollout-timeout:
+    description: Maximum rollout wait time.
+    required: false
+    default: 5m
+
+runs:
+  using: composite
+  steps:
+    - run: |
+        set -euo pipefail
+
+        test -n "$KUBE_CONFIG_DATA"
+        test -n "$INPUT_CONTEXT"
+        test -n "$INPUT_NAMESPACE"
+        test -n "$INPUT_DEPLOYMENT"
+        test -n "$INPUT_CONTAINER"
+        test -n "$INPUT_KUBECTL_VERSION"
+
+        kubectl_path="$RUNNER_TEMP/kubectl"
+        kubeconfig_path="$RUNNER_TEMP/kubeconfig"
+        kubectl_version="v${INPUT_KUBECTL_VERSION#v}"
+        trap 'rm -f "$kubectl_path" "$kubeconfig_path"' EXIT
+
+        printf '%s' "$KUBE_CONFIG_DATA" | base64 --decode > "$kubeconfig_path"
+        chmod 600 "$kubeconfig_path"
+        curl --fail --location --silent --show-error \
+          --output "$kubectl_path" \
+          "https://dl.k8s.io/release/${kubectl_version}/bin/linux/amd64/kubectl"
+        chmod 755 "$kubectl_path"
+
+        "$kubectl_path" --kubeconfig "$kubeconfig_path" --context "$INPUT_CONTEXT" \
+          --namespace "$INPUT_NAMESPACE" set image "deployment/$INPUT_DEPLOYMENT" \
+          "$INPUT_CONTAINER=$INPUT_IMAGE"
+        "$kubectl_path" --kubeconfig "$kubeconfig_path" --context "$INPUT_CONTEXT" \
+          --namespace "$INPUT_NAMESPACE" rollout status "deployment/$INPUT_DEPLOYMENT" \
+          --timeout "$INPUT_ROLLOUT_TIMEOUT"
+      shell: bash

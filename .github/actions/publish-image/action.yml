@@ -1,0 +1,25 @@
+name: publish-image
+description: Load, tag, and publish a Docker image archive.
+
+inputs:
+  image:
+    description: Local Docker image name.
+    required: true
+  archive:
+    description: Path to the Docker image archive.
+    required: true
+  tags:
+    description: Whitespace-separated registry image tags.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - run: docker image load --input "$INPUT_ARCHIVE"
+      shell: bash
+    - run: |
+        for tag in $INPUT_TAGS; do
+          docker image tag "$INPUT_IMAGE" "$tag"
+          docker image push "$tag"
+        done
+      shell: bash

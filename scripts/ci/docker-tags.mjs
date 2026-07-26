@@ -10,10 +10,9 @@ if (!imageName || !shortSha || !eventName) {
 
 const tags = [`${imageName}:${shortSha}`]
 
-if (eventName === 'pull_request') {
-  const prNumber = process.env.PR_NUMBER
-  if (!prNumber)
-    throw new Error('PR_NUMBER must be set for pull request builds')
+const prNumber = process.env.PR_NUMBER
+
+if (prNumber) {
   tags.push(`${imageName}:${prNumber}-${shortSha}`)
 } else if (eventName === 'push') {
   const branchName = process.env.GITHUB_REF_NAME
