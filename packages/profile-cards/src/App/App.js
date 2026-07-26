@@ -25,7 +25,11 @@ export default {
         formScale.value = 1
         return
       }
-      const nextScale = Math.min(1, (availableHeight / measuredHeight) * FORM_SCALE_BIAS, FORM_SCALE_BIAS)
+      const nextScale = Math.min(
+        1,
+        (availableHeight / measuredHeight) * FORM_SCALE_BIAS,
+        FORM_SCALE_BIAS,
+      )
       formScale.value = nextScale
     }
     const scheduleScaleRecalculation = useDebounceFn(recalculateScale, 45)

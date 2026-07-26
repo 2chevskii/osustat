@@ -6,7 +6,11 @@ import CardTabs from '@/components/CardTabs/CardTabs.vue'
 import UsernameTab from '@/parts/UsernameTab/UsernameTab.vue'
 import UserIdTab from '@/parts/UserIdTab/UserIdTab.vue'
 import { buildCardRequestUrl, getApiBase, IDENTIFIER_FALLBACK } from '@/composables/cardUrl'
-import { createFormQueryString, DEFAULT_FORM_SETTINGS, parseFormStateFromSearch } from '@/composables/cardFormQuery'
+import {
+  createFormQueryString,
+  DEFAULT_FORM_SETTINGS,
+  parseFormStateFromSearch,
+} from '@/composables/cardFormQuery'
 import { requestCardResource } from '@/composables/cardRequest'
 
 const apiBase = getApiBase(import.meta.env.VITE_API_URL)
@@ -38,10 +42,12 @@ export default {
     const activeIdentifier = computed(() =>
       activeTab.value === 'username' ? username.value.trim() : userId.value.trim(),
     )
-    const requestIdentifierFallback = computed(() =>
-      IDENTIFIER_FALLBACK[activeTab.value === 'username' ? 'username' : 'id'],
+    const requestIdentifierFallback = computed(
+      () => IDENTIFIER_FALLBACK[activeTab.value === 'username' ? 'username' : 'id'],
     )
-    const activeIdentifierType = computed(() => (activeTab.value === 'username' ? 'username' : 'id'))
+    const activeIdentifierType = computed(() =>
+      activeTab.value === 'username' ? 'username' : 'id',
+    )
     const requestUrl = computed(() => {
       const identifier = activeIdentifier.value || requestIdentifierFallback.value
       return buildCardRequestUrl(apiBase, {
@@ -64,16 +70,13 @@ export default {
     const isSyncingFromHistory = ref(false)
     let stopHistorySync = () => {}
     const { copy: copyToClipboard, isSupported: isClipboardSupported } = useClipboard()
-    const { floatingStyles: requestUrlTooltipStyles, update: updateRequestUrlTooltip } = useFloating(
-      requestUrlTooltipReference,
-      requestUrlTooltipRef,
-      {
+    const { floatingStyles: requestUrlTooltipStyles, update: updateRequestUrlTooltip } =
+      useFloating(requestUrlTooltipReference, requestUrlTooltipRef, {
         placement: 'top',
         strategy: 'fixed',
         middleware: [offset(6), flip(), shift({ padding: 8 })],
         whileElementsMounted: autoUpdate,
-      },
-    )
+      })
     function writeFormSettingsToQuery() {
       if (typeof window === 'undefined') return
 
@@ -190,7 +193,7 @@ export default {
       const clientX = requestUrlMouse.x.value ?? requestUrlRect.left
       const clientY = requestUrlMouse.y.value ?? requestUrlRect.top
       const boundedElementX = Math.min(
-        Math.max(0, (requestUrlMouse.elementX.value ?? 0)),
+        Math.max(0, requestUrlMouse.elementX.value ?? 0),
         Math.max(0, requestUrlRect.width - 1),
       )
       requestUrlTooltipReference.value = {

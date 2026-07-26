@@ -28,7 +28,7 @@
         "${workspaceFolder}/packages/api/docker-compose.yaml",
         "down"
       ],
-      "problemMatcher": [],
+      "problemMatcher": []
     }
   ]
 }

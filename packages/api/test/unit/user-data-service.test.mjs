@@ -25,14 +25,18 @@ const osuUser = {
 }
 
 test('returns a cached user id without calling the osu API', async () => {
-  const userService = /** @type {import('../../src/features/users/shared/user-service.mjs').UserService} */ (
-    /** @type {unknown} */ ({
-    getByUsername: async () => assert.fail('must not fetch'),
-  }))
-  const cache = /** @type {import('../../src/features/users/shared/user-cache-service.mjs').UserCacheService} */ (
-    /** @type {unknown} */ ({
-    getId: async () => 42,
-  }))
+  const userService =
+    /** @type {import('../../src/features/users/shared/user-service.mjs').UserService} */ (
+      /** @type {unknown} */ ({
+        getByUsername: async () => assert.fail('must not fetch'),
+      })
+    )
+  const cache =
+    /** @type {import('../../src/features/users/shared/user-cache-service.mjs').UserCacheService} */ (
+      /** @type {unknown} */ ({
+        getId: async () => 42,
+      })
+    )
   const service = new UserDataService(userService, cache)
 
   assert.equal(await service.resolveUserIdByUsername('peppy'), 42)
@@ -41,30 +45,34 @@ test('returns a cached user id without calling the osu API', async () => {
 test('fetches a cache miss and stores the mapped user data', async () => {
   /** @type {Array<unknown[]>} */
   const updates = []
-  const userService = /** @type {import('../../src/features/users/shared/user-service.mjs').UserService} */ (
-    /** @type {unknown} */ ({
-    /** @param {string} username */
-    getByUsername: async (username) => {
-      assert.equal(username, 'peppy')
-      return osuUser
-    },
-  }))
-  const cache = /** @type {import('../../src/features/users/shared/user-cache-service.mjs').UserCacheService} */ (
-    /** @type {unknown} */ ({
-    getId: async () => null,
-    /** @param {string} username @param {number} userId */
-    setId: async (username, userId) => {
-      updates.push(['id', username, userId])
-    },
-    /** @param {number} userId @param {{ id: number, username: string, avatarUrl: string, followerCount: number, joinedAt: string, isSupporter: boolean, countryCode: string }} shortInfo */
-    setShortInfo: async (userId, shortInfo) => {
-      updates.push(['info', userId, shortInfo])
-    },
-    /** @param {number} userId @param {{ rank: number, countryRank: number, pp: number, rankedScore: number, totalScore: number, playCount: number, playTime: number, level: number, accuracy: number, highestRank: number | undefined }} shortStats */
-    setShortStats: async (userId, shortStats) => {
-      updates.push(['stats', userId, shortStats])
-    },
-  }))
+  const userService =
+    /** @type {import('../../src/features/users/shared/user-service.mjs').UserService} */ (
+      /** @type {unknown} */ ({
+        /** @param {string} username */
+        getByUsername: async (username) => {
+          assert.equal(username, 'peppy')
+          return osuUser
+        },
+      })
+    )
+  const cache =
+    /** @type {import('../../src/features/users/shared/user-cache-service.mjs').UserCacheService} */ (
+      /** @type {unknown} */ ({
+        getId: async () => null,
+        /** @param {string} username @param {number} userId */
+        setId: async (username, userId) => {
+          updates.push(['id', username, userId])
+        },
+        /** @param {number} userId @param {{ id: number, username: string, avatarUrl: string, followerCount: number, joinedAt: string, isSupporter: boolean, countryCode: string }} shortInfo */
+        setShortInfo: async (userId, shortInfo) => {
+          updates.push(['info', userId, shortInfo])
+        },
+        /** @param {number} userId @param {{ rank: number, countryRank: number, pp: number, rankedScore: number, totalScore: number, playCount: number, playTime: number, level: number, accuracy: number, highestRank: number | undefined }} shortStats */
+        setShortStats: async (userId, shortStats) => {
+          updates.push(['stats', userId, shortStats])
+        },
+      })
+    )
   const service = new UserDataService(userService, cache)
 
   assert.equal(await service.resolveUserIdByUsername('peppy'), 42)
@@ -103,14 +111,18 @@ test('fetches a cache miss and stores the mapped user data', async () => {
 })
 
 test('uses cached short stats without fetching the user again', async () => {
-  const userService = /** @type {import('../../src/features/users/shared/user-service.mjs').UserService} */ (
-    /** @type {unknown} */ ({
-    getById: async () => assert.fail('must not fetch'),
-  }))
-  const cache = /** @type {import('../../src/features/users/shared/user-cache-service.mjs').UserCacheService} */ (
-    /** @type {unknown} */ ({
-    getShortStats: async () => ({ rank: 1, pp: 999 }),
-  }))
+  const userService =
+    /** @type {import('../../src/features/users/shared/user-service.mjs').UserService} */ (
+      /** @type {unknown} */ ({
+        getById: async () => assert.fail('must not fetch'),
+      })
+    )
+  const cache =
+    /** @type {import('../../src/features/users/shared/user-cache-service.mjs').UserCacheService} */ (
+      /** @type {unknown} */ ({
+        getShortStats: async () => ({ rank: 1, pp: 999 }),
+      })
+    )
   const service = new UserDataService(userService, cache)
 
   assert.deepEqual(await service.getUserShortStats(42), { rank: 1, pp: 999 })

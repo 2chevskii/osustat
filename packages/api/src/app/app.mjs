@@ -50,7 +50,7 @@ export class App {
       reply.headers({
         'access-control-allow-origin': 'http://localhost:5173',
         'access-control-allow-methods': 'GET POST PUT PATCH DELETE',
-        "access-control-allow-credentials": "true"
+        'access-control-allow-credentials': 'true',
       })
     })
 

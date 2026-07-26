@@ -5,7 +5,13 @@
     <div class="tab-selector-group">
       <template v-for="tab in tabs" :key="tab.id">
         <label :for="tab.id" class="tab-selector">
-          <input type="radio" :id="tab.id" :name="'card-tab'" :checked="isActiveTab(tab.id)" @change="selectTab(tab.id)" />
+          <input
+            type="radio"
+            :id="tab.id"
+            :name="'card-tab'"
+            :checked="isActiveTab(tab.id)"
+            @change="selectTab(tab.id)"
+          />
           {{ tab.displayName }}
         </label>
       </template>

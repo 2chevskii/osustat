@@ -1,7 +1,8 @@
 const REQUEST_ERROR_LIMIT = 200
 
 function formatRequestError(response) {
-  return response.text()
+  return response
+    .text()
     .then((detail) => detail.slice(0, REQUEST_ERROR_LIMIT))
     .catch(() => '')
     .then((detail) => {

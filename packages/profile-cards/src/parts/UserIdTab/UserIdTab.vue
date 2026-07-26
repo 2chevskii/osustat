@@ -14,7 +14,11 @@
       />
     </label>
 
-    <SizeSelector id-prefix="userid" :model-value="size" @update:model-value="$emit('update:size', $event)" />
+    <SizeSelector
+      id-prefix="userid"
+      :model-value="size"
+      @update:model-value="$emit('update:size', $event)"
+    />
   </CardTab>
 </template>
 

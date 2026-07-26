@@ -9,70 +9,49 @@
       "name": "dev(api)",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": [
-        "run",
-        "dev:api"
-      ],
+      "runtimeArgs": ["run", "dev:api"],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "autoAttachChildProcesses": true,
       "restart": true,
-      "skipFiles": [
-        "<node_internals>/**"
-      ]
+      "skipFiles": ["<node_internals>/**"]
     },
     {
       "type": "node",
       "name": "dev(profile-cards)",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": [
-        "run",
-        "dev:cards"
-      ],
+      "runtimeArgs": ["run", "dev:cards"],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "autoAttachChildProcesses": true,
       "restart": true,
-      "skipFiles": [
-        "<node_internals>/**"
-      ]
+      "skipFiles": ["<node_internals>/**"]
     },
     {
       "type": "node",
       "name": "dev(api, docker-compose)",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": [
-        "run",
-        "dev:api"
-      ],
+      "runtimeArgs": ["run", "dev:api"],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "autoAttachChildProcesses": true,
       "restart": true,
       "preLaunchTask": "api/docker-compose::start",
       "postDebugTask": "api/docker-compose::stop",
-      "skipFiles": [
-        "<node_internals>/**"
-      ]
+      "skipFiles": ["<node_internals>/**"]
     }
   ],
   "compounds": [
     {
       "name": "dev(api, profile-cards)",
-      "configurations": [
-        "dev(api)",
-        "dev(profile-cards)"
-      ],
+      "configurations": ["dev(api)", "dev(profile-cards)"],
       "stopAll": true
     },
     {
       "name": "dev(*)",
-      "configurations": [
-        "dev(api, docker-compose)",
-        "dev(profile-cards)"
-      ],
+      "configurations": ["dev(api, docker-compose)", "dev(profile-cards)"],
       "stopAll": true
     }
   ]

@@ -43,7 +43,11 @@
       </Transition>
     </div>
 
-    <div v-if="hasRenderAttempt" class="preview-shell" :style="{ '--preview-slot-height': `${previewSlotHeight}px` }">
+    <div
+      v-if="hasRenderAttempt"
+      class="preview-shell"
+      :style="{ '--preview-slot-height': `${previewSlotHeight}px` }"
+    >
       <div v-if="isLoading" class="loading-state">
         <Loader2 class="loading-icon" :size="28" stroke-width="2.1" />
         <p class="status">Rendering card…</p>

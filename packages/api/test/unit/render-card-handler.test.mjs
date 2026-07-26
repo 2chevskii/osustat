@@ -29,7 +29,10 @@ test('resolves a username and renders a compact card from short user data', asyn
     },
   })
   const renderer = /** @type {any} */ ({
-    renderCompact: async (/** @type {{ rank: number }} */ stats, /** @type {{ username: string }} */ info) => {
+    renderCompact: async (
+      /** @type {{ rank: number }} */ stats,
+      /** @type {{ username: string }} */ info,
+    ) => {
       assert.deepEqual(stats, { rank: 1 })
       assert.deepEqual(info, { username: 'peppy' })
       return '<svg>compact</svg>'

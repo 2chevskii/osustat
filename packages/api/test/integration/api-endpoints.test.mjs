@@ -31,56 +31,59 @@ after(async () => {
 })
 
 async function buildApp() {
-  const userDataService = /** @type {import('../../src/features/users/shared/user-data-service.mjs').UserDataService} */ ({
-    /** @param {string} username */
-    async resolveUserIdByUsername(username) {
-      assert.equal(username, 'peppy')
-      return 42
-    },
-    /** @param {number} userId */
-    async getUserShortStats(userId) {
-      assert.equal(userId, 42)
-      return {
-        rank: 1234,
-        countryRank: 56,
-        pp: 9876,
-        rankedScore: 1234567,
-        totalScore: 2345678,
-        playCount: 321,
-        playTime: 7200,
-        level: 100,
-        highestRank: 12,
-        accuracy: 98.76,
-      }
-    },
-    /** @param {number} userId */
-    async getUserShortInfo(userId) {
-      assert.equal(userId, 42)
-      return {
-        username: 'peppy',
-        avatarUrl: 'https://example.test/avatar.png',
-        followerCount: 42,
-        joinedAt: '2020-01-02T00:00:00Z',
-      }
-    },
-    /** @param {string} username */
-    async fetchAndUpdateCachedUserByUsername(username) {
-      void username
-      throw new Error('Not implemented')
-    },
-    /** @param {number} userId */
-    async fetchAndUpdateCachedUserById(userId) {
-      void userId
-      throw new Error('Not implemented')
-    },
-    /** @param {import('../../src/features/users/shared/user-service.mjs').OsuUser} user */
-    async updateCachedUser(user) {
-      void user
-      throw new Error('Not implemented')
-    },
-    userService: /** @type {import('../../src/features/users/shared/user-service.mjs').UserService} */ ({}),
-    userCacheService: /** @type {import('../../src/features/users/shared/user-cache-service.mjs').UserCacheService} */ ({}),
-  })
+  const userDataService =
+    /** @type {import('../../src/features/users/shared/user-data-service.mjs').UserDataService} */ ({
+      /** @param {string} username */
+      async resolveUserIdByUsername(username) {
+        assert.equal(username, 'peppy')
+        return 42
+      },
+      /** @param {number} userId */
+      async getUserShortStats(userId) {
+        assert.equal(userId, 42)
+        return {
+          rank: 1234,
+          countryRank: 56,
+          pp: 9876,
+          rankedScore: 1234567,
+          totalScore: 2345678,
+          playCount: 321,
+          playTime: 7200,
+          level: 100,
+          highestRank: 12,
+          accuracy: 98.76,
+        }
+      },
+      /** @param {number} userId */
+      async getUserShortInfo(userId) {
+        assert.equal(userId, 42)
+        return {
+          username: 'peppy',
+          avatarUrl: 'https://example.test/avatar.png',
+          followerCount: 42,
+          joinedAt: '2020-01-02T00:00:00Z',
+        }
+      },
+      /** @param {string} username */
+      async fetchAndUpdateCachedUserByUsername(username) {
+        void username
+        throw new Error('Not implemented')
+      },
+      /** @param {number} userId */
+      async fetchAndUpdateCachedUserById(userId) {
+        void userId
+        throw new Error('Not implemented')
+      },
+      /** @param {import('../../src/features/users/shared/user-service.mjs').OsuUser} user */
+      async updateCachedUser(user) {
+        void user
+        throw new Error('Not implemented')
+      },
+      userService:
+        /** @type {import('../../src/features/users/shared/user-service.mjs').UserService} */ ({}),
+      userCacheService:
+        /** @type {import('../../src/features/users/shared/user-cache-service.mjs').UserCacheService} */ ({}),
+    })
   const templateCache = new CardTemplateCache(
     redis,
     new CompiledTemplateCache(),
@@ -119,7 +122,9 @@ test('renders a compact SVG card for a player username', async (t) => {
   const app = await buildApp()
   t.after(() => app.close())
 
-  const response = await app.inject('/api/players/username/peppy/cards/compact.svg')
+  const response = await app.inject(
+    '/api/players/username/peppy/cards/compact.svg',
+  )
 
   assert.equal(response.statusCode, 200)
   assert.equal(response.headers['content-type'], 'image/svg+xml; charset=utf-8')
@@ -145,7 +150,9 @@ test('renders a compact PNG card for a player username', async (t) => {
   const app = await buildApp()
   t.after(() => app.close())
 
-  const response = await app.inject('/api/players/username/peppy/cards/compact.png')
+  const response = await app.inject(
+    '/api/players/username/peppy/cards/compact.png',
+  )
 
   assert.equal(response.statusCode, 200)
   assert.equal(response.headers['content-type'], 'image/png')

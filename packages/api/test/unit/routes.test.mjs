@@ -15,10 +15,7 @@ import { registerHealthEndpoint } from '../../src/health/routes.mjs'
 async function buildApp(handler) {
   const app = Fastify()
   app.register(registerHealthEndpoint)
-  app.register(
-    playersPlugin,
-    /** @type {any} */ ({ handler }),
-  )
+  app.register(playersPlugin, /** @type {any} */ ({ handler }))
   await app.ready()
   return app
 }

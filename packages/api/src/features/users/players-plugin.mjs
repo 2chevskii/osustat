@@ -10,7 +10,10 @@ import { renderCardByUsernameRoute } from './render-card/routes.mjs'
 export function playersPlugin(fastify, options) {
   const { handler } = options
 
-  fastify.get('/api/players/id/:id/cards/:size.svg', renderCardByIdRoute(handler))
+  fastify.get(
+    '/api/players/id/:id/cards/:size.svg',
+    renderCardByIdRoute(handler),
+  )
   fastify.get(
     '/api/players/username/:username/cards/:size.svg',
     renderCardByUsernameRoute(handler),
