@@ -46,6 +46,14 @@ export class App {
 
     this.compiledTemplateCache = new CompiledTemplateCache()
 
+    this.fastify.addHook('onRequest', async (_, reply) => {
+      reply.headers({
+        'access-control-allow-origin': 'http://localhost:5173',
+        'access-control-allow-methods': 'GET POST PUT PATCH DELETE',
+        "access-control-allow-credentials": "true"
+      })
+    })
+
     this.registerEndpoints()
 
     console.log('App started')
