@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@testcontainers/redis": "^12.0.4",
-    "@types/node": "^26.1.1",
+    "@types/node": "^24.13.3",
     "testcontainers": "^12.0.4",
     "typescript": "^6.0.3"
   }
