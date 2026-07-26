@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import Fastify from 'fastify'
-import { RedisContainer } from '@testcontainers/redis'
+import { RedisContainer, StartedRedisContainer } from '@testcontainers/redis'
 import { createClient } from 'redis'
 import { registerHealthEndpoint } from '../../src/health/routes.mjs'
 import { playersPlugin } from '../../src/features/users/players-plugin.mjs'
@@ -11,7 +11,9 @@ import { CardTemplateProvider } from '../../src/features/users/render-card/templ
 import { CardTemplateCache } from '../../src/features/users/render-card/templates/card-template-cache.mjs'
 import { CompiledTemplateCache } from '../../src/features/users/render-card/templates/compiled-template-cache.mjs'
 
+/** @type {StartedRedisContainer} */
 let container
+/** @type {import('redis').RedisClientType} */
 let redis
 
 before(async () => {
@@ -30,11 +32,13 @@ after(async () => {
 })
 
 async function buildApp() {
-  const userDataService = {
+  const userDataService = /** @type {import('../../src/features/users/shared/user-data-service.mjs').UserDataService} */ ({
+    /** @param {string} username */
     async resolveUserIdByUsername(username) {
       assert.equal(username, 'peppy')
       return 42
     },
+    /** @param {number} userId */
     async getUserShortStats(userId) {
       assert.equal(userId, 42)
       return {
@@ -50,6 +54,7 @@ async function buildApp() {
         accuracy: 98.76,
       }
     },
+    /** @param {number} userId */
     async getUserShortInfo(userId) {
       assert.equal(userId, 42)
       return {
@@ -59,7 +64,21 @@ async function buildApp() {
         joinedAt: '2020-01-02T00:00:00Z',
       }
     },
-  }
+    /** @param {string} _username */
+    async fetchAndUpdateCachedUserByUsername(_username) {
+      throw new Error('Not implemented')
+    },
+    /** @param {number} _userId */
+    async fetchAndUpdateCachedUserById(_userId) {
+      throw new Error('Not implemented')
+    },
+    /** @param {import('../../src/features/users/shared/user-service.mjs').OsuUser} _user */
+    async updateCachedUser(_user) {
+      throw new Error('Not implemented')
+    },
+    userService: /** @type {import('../../src/features/users/shared/user-service.mjs').UserService} */ ({}),
+    userCacheService: /** @type {import('../../src/features/users/shared/user-cache-service.mjs').UserCacheService} */ ({}),
+  })
   const templateCache = new CardTemplateCache(
     redis,
     new CompiledTemplateCache(),
@@ -86,7 +105,7 @@ test('renders a full SVG card for a player ID', async (t) => {
   const app = await buildApp()
   t.after(() => app.close())
 
-  const response = await app.inject('/players/id/42/cards/full.svg')
+  const response = await app.inject('/api/players/id/42/cards/full.svg')
 
   assert.equal(response.statusCode, 200)
   assert.equal(response.headers['content-type'], 'image/svg+xml; charset=utf-8')
@@ -98,7 +117,7 @@ test('renders a compact SVG card for a player username', async (t) => {
   const app = await buildApp()
   t.after(() => app.close())
 
-  const response = await app.inject('/players/username/peppy/cards/compact.svg')
+  const response = await app.inject('/api/players/username/peppy/cards/compact.svg')
 
   assert.equal(response.statusCode, 200)
   assert.equal(response.headers['content-type'], 'image/svg+xml; charset=utf-8')
@@ -110,7 +129,7 @@ test('renders a full PNG card for a player ID', async (t) => {
   const app = await buildApp()
   t.after(() => app.close())
 
-  const response = await app.inject('/players/id/42/cards/full.png')
+  const response = await app.inject('/api/players/id/42/cards/full.png')
 
   assert.equal(response.statusCode, 200)
   assert.equal(response.headers['content-type'], 'image/png')
@@ -124,7 +143,7 @@ test('renders a compact PNG card for a player username', async (t) => {
   const app = await buildApp()
   t.after(() => app.close())
 
-  const response = await app.inject('/players/username/peppy/cards/compact.png')
+  const response = await app.inject('/api/players/username/peppy/cards/compact.png')
 
   assert.equal(response.statusCode, 200)
   assert.equal(response.headers['content-type'], 'image/png')
