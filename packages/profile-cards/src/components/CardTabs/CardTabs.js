@@ -1,6 +1,9 @@
-import { onMounted, provide, reactive, watchEffect } from 'vue'
+import { defineComponent, onMounted, provide, reactive, watchEffect } from 'vue'
 
-export default {
+/** @typedef {{ id: string, displayName: string }} Tab */
+/** @typedef {{ activeTabId: string | null, register: (id: string, displayName: string) => void }} TabsContext */
+
+export default defineComponent({
   props: {
     modelValue: {
       type: String,
@@ -9,23 +12,25 @@ export default {
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
-    const tabs = reactive([])
-    const context = reactive({
+    const tabs = reactive(/** @type {Tab[]} */ ([]))
+    const context = reactive(/** @type {TabsContext} */ ({
       activeTabId: null,
       register(id, displayName) {
         if (tabs.some((tab) => tab.id === id)) return
         tabs.push({ id, displayName })
       },
-    })
+    }))
 
     provide('tabs_context', context)
 
+    /** @param {string} tabId */
     function selectTab(tabId) {
       if (context.activeTabId === tabId) return
       context.activeTabId = tabId
       emit('update:modelValue', tabId)
     }
 
+    /** @param {string} id */
     function isActiveTab(id) {
       return context.activeTabId === id
     }
@@ -39,7 +44,8 @@ export default {
       }
 
       if (!context.activeTabId || !tabs.some((tab) => tab.id === context.activeTabId)) {
-        selectTab(tabs[0].id)
+        const firstTab = tabs[0]
+        if (firstTab) selectTab(firstTab.id)
       }
     })
 
@@ -51,7 +57,8 @@ export default {
         return
       }
 
-      selectTab(tabs[0].id)
+      const firstTab = tabs[0]
+      if (firstTab) selectTab(firstTab.id)
     })
 
     return {
@@ -60,4 +67,4 @@ export default {
       tabs,
     }
   },
-}
+})

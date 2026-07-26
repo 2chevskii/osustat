@@ -10,7 +10,9 @@ export default {
     CardForm,
   },
   setup() {
+    /** @type {import('vue').Ref<HTMLElement | null>} */
     const scaleHost = ref(null)
+    /** @type {import('vue').Ref<HTMLElement | null>} */
     const scaleShell = ref(null)
     const formScale = ref(1)
     let stopHostResize = () => {}
@@ -37,8 +39,8 @@ export default {
       await nextTick()
       recalculateScale()
 
-      stopHostResize = useResizeObserver(scaleHost, scheduleScaleRecalculation)
-      stopShellResize = useResizeObserver(scaleShell, scheduleScaleRecalculation)
+      stopHostResize = useResizeObserver(scaleHost, scheduleScaleRecalculation).stop
+      stopShellResize = useResizeObserver(scaleShell, scheduleScaleRecalculation).stop
       if (typeof window !== 'undefined') {
         stopWindowResize = useEventListener(window, 'resize', scheduleScaleRecalculation)
       }

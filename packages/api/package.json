@@ -4,11 +4,10 @@
   "description": "",
   "main": "src/server.mjs",
   "scripts": {
-    "build": "npm run typecheck",
-    "dev": "node --watch --watch-preserve-output --watch-path=src src/server.mjs",
     "start": "node .",
-    "lint": "eslint src test",
     "test": "node --test",
+    "dev": "node --watch --watch-preserve-output --watch-path=src src/server.mjs",
+    "lint": "eslint .",
     "test:unit": "node --test test/unit/*.test.mjs",
     "test:integration": "node --test test/integration/*.test.mjs",
     "typecheck": "tsc --noEmit -p jsconfig.json"

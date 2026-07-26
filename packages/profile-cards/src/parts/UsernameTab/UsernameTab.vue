@@ -10,7 +10,7 @@
         class="input"
         placeholder="peppy"
         :value="value"
-        @input="$emit('update:value', $event.target.value)"
+        @input="updateValue"
       />
     </label>
 

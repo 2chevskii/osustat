@@ -14,6 +14,15 @@ import {
 import { requestCardResource } from '@/composables/cardRequest'
 
 const apiBase = getApiBase(import.meta.env.VITE_API_URL)
+
+/**
+ * @param {unknown} error
+ * @param {string} fallback
+ */
+function getErrorMessage(error, fallback) {
+  return error instanceof Error ? error.message : fallback
+}
+
 export default {
   components: {
     CardTabs,
@@ -58,14 +67,18 @@ export default {
     })
     const previewSlotHeight = computed(() => (selectedSize.value === 'compact' ? 260 : 360))
     const hasRenderAttempt = ref(false)
+    /** @type {import('vue').Ref<HTMLElement | null>} */
     const requestUrlRef = ref(null)
+    /** @type {import('vue').Ref<HTMLElement | null>} */
     const requestUrlTooltipRef = ref(null)
+    /** @type {import('vue').Ref<import('@floating-ui/vue').ReferenceElement | null>} */
     const requestUrlTooltipReference = ref(null)
     const isRequestUrlTooltipVisible = ref(false)
     const requestUrlTooltipText = ref('Click to copy URL')
     const requestUrlTooltipOriginX = ref('50%')
     const requestUrlTooltipOriginY = ref('50%')
     const requestUrlMouse = useMouseInElement(requestUrlRef)
+    /** @type {ReturnType<typeof setTimeout> | null} */
     let requestUrlTooltipTimeout = null
     const isSyncingFromHistory = ref(false)
     let stopHistorySync = () => {}
@@ -109,6 +122,7 @@ export default {
       cardSvgUrl.value = ''
       previousBlobUrl = ''
     }
+    /** @param {string} message */
     function handleError(message) {
       errorMessage.value = message
       clearRenderedCard()
@@ -125,7 +139,7 @@ export default {
         previousBlobUrl = URL.createObjectURL(blob)
         cardSvgUrl.value = previousBlobUrl
       } catch (error) {
-        handleError(error?.message || 'Failed to render card')
+        handleError(getErrorMessage(error, 'Failed to render card'))
       } finally {
         isLoading.value = false
       }
@@ -151,6 +165,7 @@ export default {
         errorMessage.value = 'Unable to copy URL. Select it and copy it manually.'
       }
     }
+    /** @param {'png' | 'svg'} format */
     async function downloadCard(format) {
       const endpoint = requestUrl.value.replace(/\.svg$/, `.${format}`)
 
@@ -171,7 +186,7 @@ export default {
         document.body.removeChild(anchor)
         URL.revokeObjectURL(blobUrl)
       } catch (error) {
-        errorMessage.value = error?.message || 'Unable to download card'
+        errorMessage.value = getErrorMessage(error, 'Unable to download card')
       }
     }
     function showRequestUrlTooltip() {

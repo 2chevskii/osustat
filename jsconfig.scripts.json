@@ -1,0 +1,11 @@
+{
+  "extends": "./jsconfig.json",
+  "include": [
+    "scripts/**/*.mjs"
+  ],
+  "compilerOptions": {
+    "types": [
+      "node"
+    ]
+  }
+}

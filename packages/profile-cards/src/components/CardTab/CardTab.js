@@ -1,9 +1,20 @@
-import { inject } from 'vue'
+import { defineComponent, inject } from 'vue'
 
-export default {
-  props: ['id', 'displayName'],
+export default defineComponent({
+  props: {
+    id: {
+      type: String,
+      required: true,
+    },
+    displayName: {
+      type: String,
+      required: true,
+    },
+  },
   setup(props) {
-    const tabsContext = inject('tabs_context')
+    const tabsContext = /** @type {{ activeTabId: string | null, register: (id: string, displayName: string) => void }} */ (
+      inject('tabs_context')
+    )
 
     tabsContext.register(props.id, props.displayName)
 
@@ -11,4 +22,4 @@ export default {
       tabsContext,
     }
   },
-}
+})

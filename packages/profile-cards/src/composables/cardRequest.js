@@ -1,5 +1,6 @@
 const REQUEST_ERROR_LIMIT = 200
 
+/** @param {Response} response */
 function formatRequestError(response) {
   return response
     .text()
@@ -11,6 +12,10 @@ function formatRequestError(response) {
     })
 }
 
+/**
+ * @param {string} url
+ * @param {string} acceptHeader
+ */
 export async function requestCardResource(url, acceptHeader) {
   const response = await fetch(url, {
     method: 'GET',
