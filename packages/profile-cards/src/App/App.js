@@ -1,6 +1,6 @@
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useDebounceFn, useEventListener, useResizeObserver } from '@vueuse/core'
-import CardForm from './components/CardForm.vue'
+import CardForm from '../components/CardForm/CardForm.vue'
 
 const MAX_FORM_HEIGHT = 900
 const FORM_SCALE_BIAS = 0.9

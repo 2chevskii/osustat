@@ -1,5 +1,5 @@
-import CardTab from '@/components/CardTab.vue'
-import SizeSelector from '@/components/SizeSelector.vue'
+import CardTab from '@/components/CardTab/CardTab.vue'
+import SizeSelector from '@/components/SizeSelector/SizeSelector.vue'
 export default {
   components: {
     CardTab,
