@@ -1,0 +1,246 @@
+.card-form {
+  width: min(640px, 95vw);
+  margin: 0 auto;
+  box-sizing: border-box;
+  background: var(--osu-surface);
+  border: 1px solid var(--osu-border);
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: var(--osu-shadow);
+  position: relative;
+}
+
+.status {
+  margin: 0;
+  min-height: 1.2rem;
+  font-size: 0.75rem;
+  color: var(--osu-text-soft);
+  text-align: center;
+}
+
+.status.error {
+  color: #ff7ca2;
+}
+
+.preview-shell {
+  margin-top: 12px;
+  min-height: var(--preview-slot-height);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.preview-placeholder {
+  width: 100%;
+  height: 100%;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--osu-text-soft);
+}
+
+.loading-icon {
+  color: var(--osu-pink);
+  animation: spin 850ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.request-url-row {
+  position: relative;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--osu-border);
+  background: var(--osu-surface-subtle);
+  color: var(--osu-text);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.card-url {
+  margin: 0;
+  font-size: 0.72rem;
+  font-family: 'Source Code Pro', 'SFMono-Regular', monospace;
+  line-height: 1.3;
+  color: #fff;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  text-decoration: underline solid rgba(255, 255, 255, 0.45);
+  text-underline-offset: 3px;
+  user-select: none;
+}
+
+.floating-tooltip {
+  position: absolute;
+  z-index: 20;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(34, 39, 52, 0.95);
+  color: #fff;
+  font-size: 0.72rem;
+  line-height: 1.1;
+  border: 1px solid rgba(255, 102, 170, 0.3);
+  pointer-events: none;
+  white-space: nowrap;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.request-tooltip-enter-active,
+.request-tooltip-leave-active {
+  transition: opacity 140ms ease;
+}
+
+.request-tooltip-enter-active .floating-tooltip-content,
+.request-tooltip-leave-active .floating-tooltip-content {
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease;
+}
+
+.request-tooltip-enter-from,
+.request-tooltip-leave-to {
+  opacity: 0;
+}
+
+.request-tooltip-enter-from .floating-tooltip-content,
+.request-tooltip-leave-to .floating-tooltip-content {
+  opacity: 0;
+  transform: translateY(6px) scaleX(0.5);
+}
+
+.request-tooltip-enter-to,
+.request-tooltip-leave-from {
+  opacity: 1;
+}
+
+.request-tooltip-enter-to .floating-tooltip-content,
+.request-tooltip-leave-from .floating-tooltip-content {
+  opacity: 1;
+  transform: translateY(0) scaleX(1);
+}
+
+.floating-tooltip-content {
+  display: inline-block;
+  color: #eff2ff;
+}
+
+.preview-wrapper {
+  width: 100%;
+  border: 1px solid var(--osu-border);
+  border-radius: 12px;
+  padding: 12px;
+  background: #141923;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.download-toolbar {
+  --download-item-size: 34px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  width: var(--download-item-size);
+  height: var(--download-item-size);
+  overflow: hidden;
+  border: 1px solid rgba(255, 102, 170, 0.35);
+  border-radius: 8px;
+  cursor: pointer;
+  background: rgba(36, 36, 47, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #fff;
+  transition: width 220ms ease-in-out;
+}
+
+.download-btn {
+  display: grid;
+  place-items: center;
+  width: var(--download-item-size);
+  height: var(--download-item-size);
+  border: none;
+  border-radius: 8px 0 0 8px;
+  cursor: pointer;
+  padding: 0;
+  color: #fff;
+  background: transparent;
+  transition: background-color 160ms ease;
+}
+
+.download-options {
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  max-width: 0;
+  overflow: hidden;
+  transition:
+    opacity 140ms ease-in-out,
+    max-width 220ms ease-in-out;
+}
+
+.download-toolbar:hover .download-options,
+.download-toolbar:focus-within .download-options {
+  opacity: 1;
+  pointer-events: auto;
+  max-width: calc(var(--download-item-size) * 2);
+}
+
+.download-option {
+  border: none;
+  border-radius: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: rgba(36, 36, 47, 0.2);
+  color: #fff;
+  box-sizing: border-box;
+  width: var(--download-item-size);
+  height: var(--download-item-size);
+  min-width: var(--download-item-size);
+  padding: 0 0.4rem;
+  transition: background-color 120ms ease;
+}
+
+.download-option:hover,
+.download-option:focus-visible {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.download-toolbar:hover .download-btn,
+.download-toolbar:focus-within .download-btn {
+  background: transparent;
+}
+
+.download-toolbar:hover,
+.download-toolbar:focus-within {
+  width: calc(var(--download-item-size) * 3);
+}
+
+.preview {
+  max-width: 100%;
+  height: auto;
+  background: transparent;
+  width: 100%;
+  border-radius: 6px;
+}

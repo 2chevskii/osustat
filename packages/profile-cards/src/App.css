@@ -1,0 +1,17 @@
+.profile-cards-shell {
+  height: 100vh;
+  width: 100%;
+  display: grid;
+  place-items: start center;
+  padding: clamp(16px, 6vh, 52px) 16px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.card-form-scale {
+  transform: scale(var(--form-scale));
+  transform-origin: top center;
+  width: fit-content;
+  transition: transform 150ms ease;
+  will-change: transform;
+}

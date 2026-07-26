@@ -1,0 +1,36 @@
+.label {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 4px;
+}
+
+.label-text {
+  display: block;
+  color: var(--osu-text-soft);
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
+.input {
+  display: block;
+  width: 100%;
+  background-color: var(--osu-bg-1);
+  border-radius: 10px;
+  border: 1px solid var(--osu-border);
+  font-size: 0.95rem;
+  appearance: textfield;
+  padding: 10px 12px;
+  color: var(--osu-text);
+  box-sizing: border-box;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    background-color 120ms ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--osu-pink);
+    background-color: #232a37;
+    box-shadow: 0 0 0 3px var(--osu-ring);
+  }
+}
