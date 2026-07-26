@@ -26,7 +26,6 @@ jobs:
 
   lint:
     name: Lint source code
-    needs: format
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -43,7 +42,6 @@ jobs:
 
   typecheck:
     name: Type-check API
-    needs: lint
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -60,7 +58,6 @@ jobs:
 
   test:
     name: Run tests
-    needs: typecheck
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -77,7 +74,11 @@ jobs:
 
   build:
     name: Build applications
-    needs: test
+    needs:
+      - format
+      - lint
+      - typecheck
+      - test
     runs-on: ubuntu-latest
     permissions:
       contents: read
