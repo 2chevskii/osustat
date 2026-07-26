@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import CardTabs from './CardTabs.vue'
 import UsernameTab from '@/parts/UsernameTab.vue'
 import UserIdTab from '@/parts/UserIdTab.vue'
@@ -8,11 +8,15 @@ import { useMouseInElement } from '@vueuse/core'
 import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue'
 
 const apiBase = (import.meta.env.VITE_API_URL ?? 'http://localhost:3001').replace(/\/$/, '')
+const DEFAULT_TAB = 'username'
+const DEFAULT_SIZE = 'full'
+const VALID_TABS = new Set(['username', 'userid'])
+const VALID_SIZES = new Set(['compact', 'full'])
 
-const activeTab = ref('username')
+const activeTab = ref(DEFAULT_TAB)
 const username = ref('')
 const userId = ref('')
-const selectedSize = ref('full')
+const selectedSize = ref(DEFAULT_SIZE)
 const cardSvgUrl = ref('')
 const isLoading = ref(false)
 const errorMessage = ref('')
@@ -40,6 +44,7 @@ const requestUrlTooltipOriginX = ref('50%')
 const requestUrlTooltipOriginY = ref('50%')
 const requestUrlMouse = useMouseInElement(requestUrlRef)
 let requestUrlTooltipTimeout = null
+let isSyncingFromHistory = false
 
 const { floatingStyles: requestUrlTooltipStyles, update: updateRequestUrlTooltip } = useFloating(
   requestUrlTooltipReference,
@@ -51,6 +56,88 @@ const { floatingStyles: requestUrlTooltipStyles, update: updateRequestUrlTooltip
     whileElementsMounted: autoUpdate,
   },
 )
+
+function readFormSettingsFromQuery() {
+  if (typeof window === 'undefined') {
+    return {
+      activeTab: DEFAULT_TAB,
+      username: '',
+      userId: '',
+      selectedSize: DEFAULT_SIZE,
+    }
+  }
+
+  const query = new URLSearchParams(window.location.search)
+
+  const tab = query.get('tab')
+  const size = query.get('size')
+  const usernameFromQuery = query.get('username')
+  const userIdFromQuery = query.get('userId')
+
+  return {
+    activeTab: tab && VALID_TABS.has(tab) ? tab : DEFAULT_TAB,
+    username: usernameFromQuery ?? '',
+    userId: userIdFromQuery ?? '',
+    selectedSize: size && VALID_SIZES.has(size) ? size : DEFAULT_SIZE,
+  }
+}
+
+const initialFormSettings = readFormSettingsFromQuery()
+
+activeTab.value = initialFormSettings.activeTab
+username.value = initialFormSettings.username
+userId.value = initialFormSettings.userId
+selectedSize.value = initialFormSettings.selectedSize
+
+function writeFormSettingsToQuery() {
+  if (typeof window === 'undefined') return
+
+  const query = new URLSearchParams(window.location.search)
+
+  if (activeTab.value === DEFAULT_TAB) {
+    query.delete('tab')
+  } else {
+    query.set('tab', activeTab.value)
+  }
+
+  if (!username.value) {
+    query.delete('username')
+  } else {
+    query.set('username', username.value)
+  }
+
+  if (!userId.value) {
+    query.delete('userId')
+  } else {
+    query.set('userId', userId.value)
+  }
+
+  if (selectedSize.value === DEFAULT_SIZE) {
+    query.delete('size')
+  } else {
+    query.set('size', selectedSize.value)
+  }
+
+  const queryString = query.toString()
+  const nextUrl = `${window.location.pathname}${queryString ? `?${queryString}` : ''}${window.location.hash}`
+  window.history.replaceState(window.history.state, '', nextUrl)
+}
+
+function applyFormSettingsFromQuery() {
+  const settings = readFormSettingsFromQuery()
+  isSyncingFromHistory = true
+
+  activeTab.value = settings.activeTab
+  username.value = settings.username
+  userId.value = settings.userId
+  selectedSize.value = settings.selectedSize
+
+  isSyncingFromHistory = false
+}
+
+function onHistoryNavigate() {
+  applyFormSettingsFromQuery()
+}
 
 function clearRenderedCard() {
   if (previousBlobUrl) URL.revokeObjectURL(previousBlobUrl)
@@ -235,9 +322,19 @@ watch(
   [activeTab, username, userId, selectedSize],
   () => {
     scheduleCardRender()
+    if (!isSyncingFromHistory) writeFormSettingsToQuery()
   },
   { immediate: true },
 )
+
+onMounted(() => {
+  writeFormSettingsToQuery()
+  window.addEventListener('popstate', onHistoryNavigate)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('popstate', onHistoryNavigate)
+})
 </script>
 
 <template>
