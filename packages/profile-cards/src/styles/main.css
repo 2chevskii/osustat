@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
+
+:root {
+  --osu-bg-0: #11131c;
+  --osu-bg-1: #171a23;
+  --osu-surface: #1d212b;
+  --osu-surface-raised: #252c39;
+  --osu-surface-subtle: #2a323f;
+  --osu-border: #344056;
+  --osu-text: #e8eaf1;
+  --osu-text-soft: #98a0b0;
+  --osu-pink: #ff66aa;
+  --osu-pink-strong: #ff4f9f;
+  --osu-pink-ghost: #ff66aa44;
+  --osu-purple: #8f69f9;
+  --osu-ring: rgba(255, 102, 170, 0.45);
+  --osu-radius: 12px;
+  --osu-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+}
+
+html {
+  min-height: 100%;
+  width: 100%;
+  background: var(--osu-bg-0);
+  color: var(--osu-text);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  min-height: 100vh;
+  color: var(--osu-text);
+  background: transparent;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+input:focus {
+  outline: none;
+}

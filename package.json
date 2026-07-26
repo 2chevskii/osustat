@@ -3,12 +3,14 @@
   "private": true,
   "workspaces": [
     "packages/api",
-    "packages/cards-frontend"
+    "packages/cards-frontend",
+    "packages/profile-cards"
   ],
   "scripts": {
     "build": "npm run build --workspaces --if-present",
     "dev:api": "npm run dev --workspace=@osustat/api",
-    "dev:frontend": "npm run dev --workspace=@osustat/frontend",
+    "dev:frontend": "npm run dev --workspace=@osustat/cards-frontend",
+    "dev:cards": "npm run dev --workspace=@osustat/profile-cards",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "lint": "eslint packages scripts",
