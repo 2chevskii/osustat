@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import Fastify from 'fastify'
-import { RedisContainer, StartedRedisContainer } from '@testcontainers/redis'
+import { RedisContainer } from '@testcontainers/redis'
 import { createClient } from 'redis'
 import { registerHealthEndpoint } from '../../src/health/routes.mjs'
 import { playersPlugin } from '../../src/features/users/players-plugin.mjs'
@@ -11,7 +11,6 @@ import { CardTemplateProvider } from '../../src/features/users/render-card/templ
 import { CardTemplateCache } from '../../src/features/users/render-card/templates/card-template-cache.mjs'
 import { CompiledTemplateCache } from '../../src/features/users/render-card/templates/compiled-template-cache.mjs'
 
-/** @type {StartedRedisContainer} */
 let container
 /** @type {import('redis').RedisClientType} */
 let redis
@@ -64,16 +63,19 @@ async function buildApp() {
         joinedAt: '2020-01-02T00:00:00Z',
       }
     },
-    /** @param {string} _username */
-    async fetchAndUpdateCachedUserByUsername(_username) {
+    /** @param {string} username */
+    async fetchAndUpdateCachedUserByUsername(username) {
+      void username
       throw new Error('Not implemented')
     },
-    /** @param {number} _userId */
-    async fetchAndUpdateCachedUserById(_userId) {
+    /** @param {number} userId */
+    async fetchAndUpdateCachedUserById(userId) {
+      void userId
       throw new Error('Not implemented')
     },
-    /** @param {import('../../src/features/users/shared/user-service.mjs').OsuUser} _user */
-    async updateCachedUser(_user) {
+    /** @param {import('../../src/features/users/shared/user-service.mjs').OsuUser} user */
+    async updateCachedUser(user) {
+      void user
       throw new Error('Not implemented')
     },
     userService: /** @type {import('../../src/features/users/shared/user-service.mjs').UserService} */ ({}),

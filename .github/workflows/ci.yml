@@ -8,35 +8,104 @@ env:
   IMAGE_NAME: ghcr.io/2chevskii/osustat-api
 
 jobs:
-  verify:
-    name: Test, build, and verify the API image
+  format:
+    name: Check formatting
     runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: npm
       - name: Install root dependencies
         run: npm ci
-      - name: Check formatting
+      - name: Verify code formatting
         run: npm run format:check
-      - name: Lint source code
+
+  lint:
+    name: Lint source code
+    needs: format
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install root dependencies
+        run: npm ci
+      - name: Run linting
         run: npm run lint
-      - name: Type-check API
+
+  typecheck:
+    name: Type-check API
+    needs: lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install root dependencies
+        run: npm ci
+      - name: Run API type-check
         run: npm run typecheck
-      - name: Run tests
+
+  test:
+    name: Run tests
+    needs: typecheck
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install root dependencies
+        run: npm ci
+      - name: Execute test suite
         run: npm test
-      - name: Build applications
+
+  build:
+    name: Build applications
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install root dependencies
+        run: npm ci
+      - name: Build monorepo packages
         run: npm run build
+
+  build_image:
+    name: Build API Docker image
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
       - name: Build API Docker image
         run: docker build --file packages/api/Dockerfile --tag osustat-api:ci .
 
   publish-image:
     name: Publish API Docker image
-    needs: verify
+    needs: build_image
     runs-on: ubuntu-latest
     # GitHub does not grant a writable token to pull requests from forks.
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
@@ -44,8 +113,8 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
       - name: Create image tags

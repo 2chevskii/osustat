@@ -1,12 +1,11 @@
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
-import { RedisContainer, StartedRedisContainer } from '@testcontainers/redis'
+import { RedisContainer } from '@testcontainers/redis'
 import { createClient } from 'redis'
 import { UserCacheService } from '../../src/features/users/shared/user-cache-service.mjs'
 import { CardTemplateCache } from '../../src/features/users/render-card/templates/card-template-cache.mjs'
 import { CompiledTemplateCache } from '../../src/features/users/render-card/templates/compiled-template-cache.mjs'
 
-/** @type {StartedRedisContainer} */
 let container
 /** @type {import('redis').RedisClientType} */
 let redis
