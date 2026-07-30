@@ -1,7 +1,5 @@
 {
-  "exclude": [
-    "node_modules/"
-  ],
+  "exclude": ["node_modules/"],
   "compilerOptions": {
     "allowJs": true,
     "maxNodeModuleJsDepth": 0,

@@ -13,13 +13,15 @@ export default defineComponent({
   emits: ['update:modelValue'],
   setup(props, { emit }) {
     const tabs = reactive(/** @type {Tab[]} */ ([]))
-    const context = reactive(/** @type {TabsContext} */ ({
-      activeTabId: null,
-      register(id, displayName) {
-        if (tabs.some((tab) => tab.id === id)) return
-        tabs.push({ id, displayName })
-      },
-    }))
+    const context = reactive(
+      /** @type {TabsContext} */ ({
+        activeTabId: null,
+        register(id, displayName) {
+          if (tabs.some((tab) => tab.id === id)) return
+          tabs.push({ id, displayName })
+        },
+      }),
+    )
 
     provide('tabs_context', context)
 

@@ -12,9 +12,10 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const tabsContext = /** @type {{ activeTabId: string | null, register: (id: string, displayName: string) => void }} */ (
-      inject('tabs_context')
-    )
+    const tabsContext =
+      /** @type {{ activeTabId: string | null, register: (id: string, displayName: string) => void }} */ (
+        inject('tabs_context')
+      )
 
     tabsContext.register(props.id, props.displayName)
 

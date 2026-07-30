@@ -26,7 +26,8 @@ export function parseFormStateFromSearch(search = '') {
     tab: tab && VALID_TABS.has(tab) ? /** @type {FormTab} */ (tab) : DEFAULT_FORM_SETTINGS.tab,
     username: query.get('username') ?? DEFAULT_FORM_SETTINGS.username,
     userId: query.get('userId') ?? DEFAULT_FORM_SETTINGS.userId,
-    size: size && VALID_SIZES.has(size) ? /** @type {CardSize} */ (size) : DEFAULT_FORM_SETTINGS.size,
+    size:
+      size && VALID_SIZES.has(size) ? /** @type {CardSize} */ (size) : DEFAULT_FORM_SETTINGS.size,
   }
 }
 
