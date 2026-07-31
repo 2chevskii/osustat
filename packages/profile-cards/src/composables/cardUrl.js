@@ -1,5 +1,3 @@
-const API_FALLBACK = 'http://localhost:3001'
-
 export const IDENTIFIER_FALLBACK = {
   username: 'peppy',
   id: '2',
@@ -7,7 +5,9 @@ export const IDENTIFIER_FALLBACK = {
 
 /** @param {string | undefined} envValue */
 export function getApiBase(envValue) {
-  return (envValue ?? API_FALLBACK).replace(/\/$/, '')
+  if (envValue === undefined)
+    throw new Error('VITE_API_URL is not defined')
+  return envValue.replace(/\/$/, '')
 }
 
 /**
