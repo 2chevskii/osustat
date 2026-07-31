@@ -30,7 +30,9 @@ export class App {
     this.logger.info('MODE=%s', this.configuration.mode)
 
     this.fastify = Fastify({ logger: true })
-    this.fastify.register(cors, {
+
+    this.logger.debug('Configuring CORS policy, allowed origins: %o', this.configuration.allowedCorsOrigins)
+    this.fastify = this.fastify.register(cors, {
       origin: this.configuration.allowedCorsOrigins,
       methods: ['GET'],
     })
