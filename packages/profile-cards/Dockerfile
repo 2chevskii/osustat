@@ -7,6 +7,8 @@ COPY packages/profile-cards/package.json packages/profile-cards/package.json
 RUN npm ci --workspace=@osustat/profile-cards
 
 COPY packages/profile-cards ./packages/profile-cards
+ARG VITE_API_URL=/api
+ENV VITE_API_URL=$VITE_API_URL
 RUN npm run build --workspace=@osustat/profile-cards
 
 FROM alpine:3.22 AS runtime

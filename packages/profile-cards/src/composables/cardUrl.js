@@ -15,5 +15,5 @@ export function getApiBase(envValue) {
  */
 export function buildCardRequestUrl(apiBase, { tab, identifier, size }) {
   const identifierType = tab === 'username' ? 'username' : 'id'
-  return `${apiBase}/api/players/${identifierType}/${encodeURIComponent(identifier)}/cards/${size}.svg`
+  return `${apiBase}/players/${identifierType}/${encodeURIComponent(identifier)}/cards/${size}.svg`
 }
