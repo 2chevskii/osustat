@@ -1,4 +1,4 @@
-import { EnvironmentModeUnsupportedError } from "./errors.mjs"
+import { EnvironmentModeUnsupportedError } from './errors.mjs'
 import { getRequiredEnv } from './utility.mjs'
 
 export class AppConfiguration {
@@ -47,8 +47,7 @@ export class AppConfiguration {
     }
 
     this.port = parseInt(getRequiredEnv(env, 'PORT'))
-    if (Number.isNaN(this.port))
-      throw new Error('Failed to parse PORT')
+    if (Number.isNaN(this.port)) throw new Error('Failed to parse PORT')
 
     this.redisUrl = getRequiredEnv(env, 'REDIS_URL')
     if (!this.redisUrl.startsWith('redis://'))
@@ -64,7 +63,7 @@ export class AppConfiguration {
 
     const rawCorsOrigins = env['CORS_ORIGINS']
     if (rawCorsOrigins !== undefined) {
-      this.allowedCorsOrigins = rawCorsOrigins.split(',').map(v => v.trim())
+      this.allowedCorsOrigins = rawCorsOrigins.split(',').map((v) => v.trim())
     } else if (this.mode === 'production') {
       this.allowedCorsOrigins = []
     }

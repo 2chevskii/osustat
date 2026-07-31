@@ -1,4 +1,4 @@
-import { EnvironmentVariableUndefinedError } from "./errors.mjs";
+import { EnvironmentVariableUndefinedError } from './errors.mjs'
 
 /**
  * @param {NodeJS.ProcessEnv} env
@@ -10,5 +10,5 @@ export function getRequiredEnv(env, key) {
   if (typeof value === 'undefined')
     throw new EnvironmentVariableUndefinedError(key)
 
-  return value;
+  return value
 }

@@ -19,7 +19,6 @@ import cors from '@fastify/cors'
 /** @import {AppConfiguration} from './configuration/index.mjs' */
 
 export class App {
-
   /** @param {AppConfiguration} configuration */
   constructor(configuration) {
     this.configuration = configuration
@@ -31,7 +30,10 @@ export class App {
 
     this.fastify = Fastify({ logger: true })
 
-    this.logger.debug('Configuring CORS policy, allowed origins: %o', this.configuration.allowedCorsOrigins)
+    this.logger.debug(
+      'Configuring CORS policy, allowed origins: %o',
+      this.configuration.allowedCorsOrigins,
+    )
     this.fastify = this.fastify.register(cors, {
       origin: this.configuration.allowedCorsOrigins,
       methods: ['GET'],
@@ -66,7 +68,10 @@ export class App {
       this.compiledTemplateCache.evictExpiredTemplates()
     })
     await this.redis.connect()
-    await this.fastify.listen({ port: this.configuration.port, host: '0.0.0.0' })
+    await this.fastify.listen({
+      port: this.configuration.port,
+      host: '0.0.0.0',
+    })
   }
 
   registerEndpoints() {

@@ -16,7 +16,6 @@ export class EnvironmentModeUnsupportedError extends Error {
 }
 
 export class EnvironmentVariableUndefinedError extends Error {
-
   /**
    * @param {string} key
    */

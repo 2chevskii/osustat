@@ -5,8 +5,7 @@ export const IDENTIFIER_FALLBACK = {
 
 /** @param {string | undefined} envValue */
 export function getApiBase(envValue) {
-  if (envValue === undefined)
-    throw new Error('VITE_API_URL is not defined')
+  if (envValue === undefined) throw new Error('VITE_API_URL is not defined')
   return envValue.replace(/\/$/, '')
 }
 
