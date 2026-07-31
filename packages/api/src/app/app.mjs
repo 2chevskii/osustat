@@ -15,16 +15,19 @@ import { CardRenderer } from '../features/users/render-card/templates/card-rende
 import cron from 'node-cron'
 import pino from 'pino'
 
-/** @typedef {{ port?: number | undefined, osuClientId?: string | undefined, osuClientSecret?: string | undefined }} AppOptions */
+/** @import {AppConfiguration} from './configuration/index.mjs' */
 
 export class App {
-  /** @param {AppOptions} [options] */
-  constructor({ port, osuClientId, osuClientSecret } = {}) {
+
+  /** @param {AppConfiguration} configuration */
+  constructor(configuration) {
+    this.configuration = configuration
+
     this.logger = pino({ level: 'trace' })
 
     this.logger.debug('Initializing App...')
+    this.logger.info('MODE=%s', this.configuration.mode)
 
-    this.port = port
     this.fastify = Fastify({ logger: true })
     this.redis = createRedisClient()
 
@@ -32,8 +35,8 @@ export class App {
     this.osuApiAuthorizationManager = new OsuApiAuthorizationManager(
       this.osuApiClient,
       {
-        clientId: osuClientId,
-        clientSecret: osuClientSecret,
+        clientId: configuration.osuClientId,
+        clientSecret: configuration.osuClientSecret,
       },
     )
 
@@ -56,7 +59,7 @@ export class App {
 
     this.registerEndpoints()
 
-    console.log('App started')
+    this.logger.info('App started')
   }
 
   async run() {
@@ -64,7 +67,7 @@ export class App {
       this.compiledTemplateCache.evictExpiredTemplates()
     })
     await this.redis.connect()
-    await this.fastify.listen({ port: this.port ?? 3001, host: '0.0.0.0' })
+    await this.fastify.listen({ port: this.configuration.port, host: '0.0.0.0' })
   }
 
   registerEndpoints() {

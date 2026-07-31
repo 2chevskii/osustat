@@ -1,13 +1,23 @@
 {
   "extends": "../../jsconfig.json",
-  "include": ["./src"],
-  "exclude": ["./node_modules"],
+  "include": [
+    "src/**/*.mjs",
+    "src/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules/**/*"
+  ],
   "typeAcquisition": {
     "enable": true,
-    "include": ["./src/**/*.js"]
+    "include": [
+      "src/**/*.mjs",
+      "src/**/*.d.ts"
+    ]
   },
   "compilerOptions": {
     "maxNodeModuleJsDepth": 0,
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   }
 }

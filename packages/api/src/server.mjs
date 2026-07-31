@@ -1,11 +1,9 @@
-import dotenv from 'dotenv'
 import { App } from './app/app.mjs'
+import { AppConfiguration } from './app/configuration/index.mjs'
 
-dotenv.config({ path: '.env.local' })
+const configuration = new AppConfiguration(AppConfiguration.getEnvironment(process.env))
+await configuration.load(process.env)
 
-const app = new App({
-  osuClientId: process.env.OSU_CLIENTID,
-  osuClientSecret: process.env.OSU_CLIENTSECRET,
-})
+const app = new App(configuration)
 
 await app.run()
