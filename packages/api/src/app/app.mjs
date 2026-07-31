@@ -38,7 +38,9 @@ export class App {
       origin: this.configuration.allowedCorsOrigins,
       methods: ['GET'],
     })
-    this.redis = createRedisClient()
+    this.redis = createRedisClient({
+      url: this.configuration.redisUrl
+    })
 
     this.osuApiClient = new OsuApiClient()
     this.osuApiAuthorizationManager = new OsuApiAuthorizationManager(
