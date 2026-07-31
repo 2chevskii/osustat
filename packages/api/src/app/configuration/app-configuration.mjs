@@ -6,12 +6,33 @@ export class AppConfiguration {
   redisUrl = 'redis://localhost:6379'
   osuClientId = ''
   osuClientSecret = ''
+  allowedCorsOrigins = ['http://localhost:5173']
 
   /**
    * @param {NodeJS.MODE} mode
    */
   constructor(mode) {
     this.mode = mode
+  }
+
+  /**
+   * @param {NodeJS.ProcessEnv} processEnv
+   * @returns {NodeJS.MODE}
+   */
+  static getEnvironment(processEnv) {
+    const mode = processEnv['MODE']?.toLowerCase()
+
+    switch (mode) {
+      case undefined:
+        return 'development'
+
+      case 'production':
+      case 'development':
+        return mode
+
+      default:
+        throw new EnvironmentModeUnsupportedError(mode)
+    }
   }
 
   /**
@@ -40,25 +61,12 @@ export class AppConfiguration {
     this.osuClientSecret = getRequiredEnv(env, 'OSU_CLIENTSECRET')
     if (this.osuClientSecret.length === 0)
       throw new Error('OSU_CLIENTSECRET cannot be empty')
-  }
 
-  /**
-   * @param {NodeJS.ProcessEnv} processEnv
-   * @returns {NodeJS.MODE}
-   */
-  static getEnvironment(processEnv) {
-    const mode = processEnv['MODE']?.toLowerCase()
-
-    switch (mode) {
-      case undefined:
-        return 'development'
-
-      case 'production':
-      case 'development':
-        return mode
-
-      default:
-        throw new EnvironmentModeUnsupportedError(mode)
+    const rawCorsOrigins = env['CORS_ORIGINS']
+    if (rawCorsOrigins !== undefined) {
+      this.allowedCorsOrigins = rawCorsOrigins.split(',').map(v => v.trim())
+    } else if (this.mode === 'production') {
+      this.allowedCorsOrigins = []
     }
   }
 }

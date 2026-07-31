@@ -14,6 +14,7 @@ import { CompiledTemplateCache } from '../features/users/render-card/templates/c
 import { CardRenderer } from '../features/users/render-card/templates/card-renderer.mjs'
 import cron from 'node-cron'
 import pino from 'pino'
+import cors from '@fastify/cors'
 
 /** @import {AppConfiguration} from './configuration/index.mjs' */
 
@@ -29,6 +30,10 @@ export class App {
     this.logger.info('MODE=%s', this.configuration.mode)
 
     this.fastify = Fastify({ logger: true })
+    this.fastify.register(cors, {
+      origin: this.configuration.allowedCorsOrigins,
+      methods: ['GET'],
+    })
     this.redis = createRedisClient()
 
     this.osuApiClient = new OsuApiClient()
@@ -48,14 +53,6 @@ export class App {
     )
 
     this.compiledTemplateCache = new CompiledTemplateCache()
-
-    this.fastify.addHook('onRequest', async (_, reply) => {
-      reply.headers({
-        'access-control-allow-origin': 'http://localhost:5173',
-        'access-control-allow-methods': 'GET POST PUT PATCH DELETE',
-        'access-control-allow-credentials': 'true',
-      })
-    })
 
     this.registerEndpoints()
 
